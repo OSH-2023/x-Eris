@@ -70,6 +70,7 @@
 
 节点中有一个特殊的 head node，它拥有：
 * Global Control Service，调度节点任务，存储各种信息。有 fault tolerance，使得GCS可以运行在任意节点上（避免单头节点失效引起分布式系统奔溃）
+  * 隐式将API注入代码的合适位置，自动形成计算图
 * Driver 进程，执行最高级别的应用程序，可提交任务
 * 其他的节点功能
 
@@ -77,9 +78,42 @@
 利用 ObjectRef 创建对对象的引用。
 * 优点：低延迟，高并发，简单可靠
 
-#### Memory
+##### Memory
 * **Heap memory** used by Ray workers during task or actor execution, small Ray objects, Ray metadata.
 
 * **Shared memory** used by large Ray objects (ObjectRef).
+
 ## Dask
-## Spark
+#### 简介：
+提交 Task -> 创建 Task Graph -> 调用 Scheduler 执行
+
+The result from a computation isn’t computed until you ask for it. Instead, a Dask task graph for the computation is produced.
+
+Scheduler 类型：
+* Local
+  * Threads
+  * Process
+  * Synchrnous
+* Distributed
+
+Dask 提供 optimizations 以优化 Task Graph
+
+## 特性设计
+* 可扩展性：
+* 高可用性
+* 数据管理
+* 任务调度
+* 通信和协调
+  * 任务的分配和调度：任务队列
+  * 节点的状态监控：心跳机制
+  * 任务的执行监控：记录日志和统计任务执行的时间
+  * 节点间的通信和同步：消息传递
+* 可定制性
+* 性能优化
+
+## 可能的应用？
+分布式+
+* 大模型推理
+  - LLaMA on Raspberry Pi 4 (10s / token)
+* Stable Diftusion Model
+* so-vits 
