@@ -16,5 +16,6 @@ The suggested developing platform is ubuntu.
 
 ## Idea
 
-1. Modify the ROS system to suit for some specific task, which maybe very hard considering the amount of code. 
+1. Modify the ROS system to suit some specific task, which may be very hard considering the amount of code. 
 2. Install the system on a robot, and write programs to manage the motors, the sensors, the processors, the network, etc. This may not be that hard, with abundant tutorials online. 
+
