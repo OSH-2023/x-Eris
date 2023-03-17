@@ -1,9 +1,5 @@
 # Operating System for IoT
 
-## Category
-
-[toc]
-
 ## What Is an IoT Operating System?
 
 Operating systems that are written for the Internet of Things are especially designed to perform within the strict constraints of small IoT devices.

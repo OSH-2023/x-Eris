@@ -1,11 +1,5 @@
 # ROS Application
 
-## Category
-
-[toc]
-
-
-
 ## Overview
 
 ROS (Robot Operating System) is an open-source software development kit for robotics applications. ROS offers a standard software platform to developers across industries that will carry them from research and prototyping all the way through to deployment and production.
