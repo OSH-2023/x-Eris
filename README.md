@@ -14,7 +14,8 @@ TBD
 ## 📅 项目进展 Progress Management
 |    Date    |         Title         |                            Result                            |    Notes     |
 | :--------: | :-------------------: | :----------------------------------------------------------: | :----------: |
-| 2022.3.12🌃 |集体调研选题            |                                                              |             |
+| 2022.3.12🌃 |集体调研选题            |[pre_research_0](/reports/pre_discussion/2023_03_12/preliminary_research.md)|              |
+| 2022.3.17🌃 |选题详细调研            |[pre_research_1](/reports/pre_discussion/2023_03_17/preliminary_research.md)|  老师参与      |
 
 ## 📂 文件说明 Folder Description
 * ```reports``` 各类报告
