@@ -1,0 +1,10 @@
+site_name: x-Eris
+repo_name: OSH-2023/x-Eris
+repo_url: https://github.com/OSH-2023/x-Eris
+docs_dir: reports
+theme:
+  name: material
+  language: 'zh'
+  palette:
+    primary: teal
+    accent: deep orange

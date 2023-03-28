@@ -1,14 +1,31 @@
 # 嵌入式设备的文件系统
+> 本篇报告主要介绍了FreeRTOS-Plus-FAT以及RT-Thread中的文件系统实现细节。
 ## 早期嵌入式设备的文件系统
 在早期的嵌入式系统中，需要存储的数据比较少，数据类型也比较单一，往往使用直接在存储设备中的指定地址写入数据的方法来存储数据。然而随着嵌入式设备功能的发展，需要存储的数据越来越多，也越来越复杂，这时仍使用旧方法来存储并管理数据就变得非常繁琐困难。因此我们需要新的数据管理方式来简化存储数据的组织形式，需要新的文件系统。
-## FreeRTOS 的文件系统
+
+## FreeRTOS (总共 6w lines) 的文件系统 
 没有提供文件系统，如果想要读写文件，有以下两种途径：
 * 先实现单个文件系统的接口，并将其注册到标准C库中。挂载之后通过标准C库的文件读写函数来操作文件。
 * 编写 VFS，支持多个文件系统的挂载，提供统一的接口读写文件。
 
-## FreeRTOS-Plus-FAT
-FreeRTOS-Plus-FAT 是一种开源、线程感知和可扩展的 FAT12/FAT16/FAT32 DOS/Windows 兼容 嵌入式 FAT 文件系统，与 RTOS 一同或分别使用。它提供了一个API来访问文件系统，并支持多种存储介质。
+## FreeRTOS-Plus-FAT (约 1w lines)
+FreeRTOS-Plus-FAT 是一种开源、线程感知和可扩展的 FAT12/FAT16/FAT32 DOS/Windows 兼容 嵌入式 FAT 文件系统（VFS），与 RTOS 一同或分别使用。它提供了一个API来访问文件系统，并支持多种存储介质。
 
+### 源代码组织
+```
+FreeRTOS-Plus-FAT    [Contains the source files that implement the FAT FS]
+  |
+  +-include          [Contains the header files for the FAT FS]
+  |
+  +-portable
+      |
+      +-common       [Contains source and header files used by all ports, inc. a RAM disk driver]
+      |
+      +-Platform_1   [Contains source file specific to the chip identified by the directory's name]
+      |
+      ...
+
+```
 ### 采用标准 eerno 值
 FreeRTOS-Plus-FAT 文件系统的标准 API 与标准 C 库使用相同的 errno 值。
 
@@ -33,7 +50,7 @@ FreeRTOS-Plus-FAT 文件系统的标准 API 与标准 C 库使用相同的 errno
 
 > 媒体是用于存储文件的物理设备。适用于 嵌入式文件系统的媒体的示例包括 SD 卡、固态磁盘、NOR 闪存芯片、NAND 闪存芯片和 RAM 芯片。 媒体不能用于保存 FreeRTOS-Plus-FAT 文件系统，直至它被分区。 将媒体划分为多个单元，每个单元被称为一个分区。然后，可以对每个分区进行格式化以保存其文件系统。
 > 
-> FF_Format() 将动态确定要使用的 FAT 类型和 簇大小。 簇大小将与簇计数相关，而簇 计算和 FAT 类型相关。 xPreferFAT16 和 xSmallClusters 参数 允许指定首选项。 例如，对于小 RAM 磁盘 将两个参数都设置为 true 以使用 FAT16 与小簇，对于 大 SD 卡，则将两个参数都设置为 false 以使用 FAT32 和 大簇。 较大的簇可以更快被访问，而较小的簇 浪费更少的空间，因为它们在文件末尾会有较少的 未使用块。
+> FF_Format() 将动态确定要使用的 FAT 类型和簇大小。 簇大小将与簇计数相关，而簇 计算和FAT 类型相关。 xPreferFAT16 和 xSmallClusters 参数 允许指定首选项。 例如，对于小 RAM 磁盘 将两个参数都设置为 true 以使用 FAT16 与小簇，对于 大 SD 卡，则将两个参数都设置为 false 以使用 FAT32 和 大簇。 较大的簇可以更快被访问，而较小的簇 浪费更少的空间，因为它们在文件末尾会有较少的 未使用块。
 
 ### 实例使用方式 
 * ```FF_SDDiskInit("/")``` 挂载/初始化
@@ -75,12 +92,14 @@ POSIX 标准意在期望获得源代码级别的软件可移植性。换句话�
 
 * UFFS 是 Ultra-low-cost Flash File System（超低功耗的闪存文件系统）的简称。它是国人开发的、专为嵌入式设备等小内存环境中使用 Nand Flash 的开源文件系统。与嵌入式中常使用的 Yaffs 文件系统相比具有资源占用少、启动速度快、免费等优势。
   
-> **总结**：可参见李润时同学调研的非虚拟文件系统介绍。
+> **总结**：可考虑选择一或两种不太复杂的文件系统为 FreeRTOS 添加支持，如RomFS。 不要涉及网络文件系统。
 
 ### 设备抽象层
 设备抽象层将物理设备如 SD Card、SPI Flash、Nand Flash，抽象成符合文件系统能够访问的设备，例如 FAT 文件系统要求存储设备必须是块设备类型。
 
 不同文件系统类型是独立于存储设备驱动而实现的，因此把底层存储设备的驱动接口和文件系统对接起来之后，才可以正确地使用文件系统功能。
 
+## 与本选题方向相关的总结
+设计 VFS 时，可以参考 RT-Thread 的三层结构组织形式、FreeRTOS-Plus-FAT 的API设计理念。
 
-
+有关 MMU 的内容请参见相关文档。
