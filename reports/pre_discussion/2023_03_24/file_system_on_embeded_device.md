@@ -12,26 +12,32 @@
 FreeRTOS-Plus-FAT 是一种开源、线程感知和可扩展的 FAT12/FAT16/FAT32 DOS/Windows 兼容 嵌入式 FAT 文件系统（VFS），与 RTOS 一同或分别使用。它提供了一个API来访问文件系统，并支持多种存储介质。
 
 ### 源代码组织
-```
-FreeRTOS-Plus-FAT    [Contains the source files that implement the FAT FS]
-  |
-  +-include          [Contains the header files for the FAT FS]
-  |
-  +-portable
-      |
-      +-common       [Contains source and header files used by all ports, inc. a RAM disk driver]
-      |
-      +-Platform_1   [Contains source file specific to the chip identified by the directory's name]
-      |
-      ...
 
-```
+* 主要
+  * ```ff_dir```: 用于访问文件夹中内容
+  * ```ff_fat```: 用于访问 FAT 文件系统
+  * ```ff_file```: 用于文件读写
+  * ```ff_ioman```: 管理缓存和挂载读写对象（介质）
+  * ```ff_format```: 格式化或分区介质
+  * ```ff_locking```: 加锁？
+  * ```ff_memory```: 从内存读取数据
+  * ```ff_stdio```: 用于文件管理（统计），相对路径转换
+  * ```ff_sys```: 用于映射文件系统到根目录
+* 辅助
+  * ```ff_headers```: 管理所有头文件
+  * ```ff_time```: 获取时间
+  * ```ff_error```: 用于错误处理
+  * ```ff_crc```: 用于计算 CRC（循环检验码）
+  * ```ff_string```: 字符串库
+* 驱动
+  * 各处理器相应的文件系统驱动
+
 ### 采用标准 eerno 值
 FreeRTOS-Plus-FAT 文件系统的标准 API 与标准 C 库使用相同的 errno 值。
 
 标准 C 库中的文件相关函数返回 0 表示通过，返回 -1 则表示失败。如果返回 -1，则失败的原因 存储在名为 errno 的变量中，须单独检查。 同样，FreeRTOS-Plus-FAT 的标准 API 返回 0 表示通过，返回 -1 则表示失败， 该 API 还会针对各项 RTOS 任务维护 errno 变量。
 
-### API 引用
+### API 设计
 包括两部分，标准函数与磁盘管理函数。
 * 标准函数
   * 目标/文件夹写入函数
@@ -52,7 +58,7 @@ FreeRTOS-Plus-FAT 文件系统的标准 API 与标准 C 库使用相同的 errno
 > 
 > FF_Format() 将动态确定要使用的 FAT 类型和簇大小。 簇大小将与簇计数相关，而簇 计算和FAT 类型相关。 xPreferFAT16 和 xSmallClusters 参数 允许指定首选项。 例如，对于小 RAM 磁盘 将两个参数都设置为 true 以使用 FAT16 与小簇，对于 大 SD 卡，则将两个参数都设置为 false 以使用 FAT32 和 大簇。 较大的簇可以更快被访问，而较小的簇 浪费更少的空间，因为它们在文件末尾会有较少的 未使用块。
 
-### 实例使用方式 
+### 使用方式示例 
 * ```FF_SDDiskInit("/")``` 挂载/初始化
 * ```ff_mkdir("/wy")``` 创建文件夹
 * ```ff_fopen( pcFileName, "w" )```打开文件流
@@ -100,6 +106,7 @@ POSIX 标准意在期望获得源代码级别的软件可移植性。换句话�
 不同文件系统类型是独立于存储设备驱动而实现的，因此把底层存储设备的驱动接口和文件系统对接起来之后，才可以正确地使用文件系统功能。
 
 ## 与本选题方向相关的总结
-设计 VFS 时，可以参考 RT-Thread 的三层结构组织形式、FreeRTOS-Plus-FAT 的API设计理念。
+设计 VFS 时，可以参考 RT-Thread 的三层结构组织形式、FreeRTOS-Plus-FAT 的API设计理念，在 FreeRTOS-Plus-FAT 继续拓展优化。
 
-有关 MMU 的内容请参见相关文档。
+例如，应继续采用标准 eerno 值以保持兼容性。同时，可以通过保持 POSIX 文件系统接口，并且添加 FreeRTOS-Plus-POSIX 来方便的运行从 Linux/Unix上移植的程序。
+> 注：FreeRTOS-Plus-POSIX 仅仅实现了部分 POSIX 接口，无法仅使用此包装器将现有的 POSIX 兼容应用程序或 POSIX 兼容库移植到 FreeRTOS 内核上运行。
