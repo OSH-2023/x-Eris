@@ -7,6 +7,7 @@
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{amsmath}
+\usepackage{hyperref}
 \definecolor{mygreen}{rgb}{0,0.6,0}  
 \definecolor{mygray}{rgb}{0.5,0.5,0.5}  
 \definecolor{mymauve}{rgb}{0.58,0,0.82}  
@@ -33,16 +34,18 @@
 
 \subsection{虚拟文件系统 - 嵌入式}
 \subsubsection{概述}
-本篇报告主要介绍了FreeRTOS-Plus-FAT以及RT-Thread中的文件系统实现细节。
+本部分主要介绍了 \texttt{FreeRTOS-Plus-FAT} 以及 \texttt{RT-Thread} 中的文件系统实现细节。
 
 在早期的嵌入式系统中，需要存储的数据比较少，数据类型也比较单一，往往使用直接在存储设备中的指定地址写入数据的方法来存储数据。然而随着嵌入式设备功能的发展，需要存储的数据越来越多，也越来越复杂，这时仍使用旧方法来存储并管理数据就变得非常繁琐困难。
-因此需要新的数据管理方式来简化存储数据的组织形式，需要新的文件系统。
-\subsubsection{FreeRTOS-Plus—FAT}
+因此需要新的数据管理方式来简化存储数据的组织形式，需要新的文件系统设计。
+
+\subsubsection{\texttt{FreeRTOS-Plus—FAT}}
+通过阅读源代码，可以简单分类此项目的文件组织如下。
 \begin{itemize}
 \item 主要
 \begin{itemize}
     \item \texttt{ff\_dir}: 用于访问文件夹中内容
-    \item \texttt{ff\_fat}: 用于访问 FAT 文件系统
+    \item \texttt{ff\_fat}: 用于访问 \texttt{FAT} 文件系统
     \item \texttt{ff\_file}: 用于文件读写
     \item \texttt{ff\_ioman}: 管理缓存和挂载读写对象（介质）
     \item \texttt{ff\_format}: 格式化或分区介质
@@ -56,7 +59,7 @@
     \item \texttt{ff\_headers}: 管理所有头文件
     \item \texttt{ff\_time}: 获取时间
     \item \texttt{ff\_error}:  用于错误处理
-    \item \texttt{ff\_crc}: 用于计算 CRC（循环检验码）
+    \item \texttt{ff\_crc}: 用于计算 \texttt{CRC}（循环检验码）
     \item \texttt{ff\_string}: 字符串库
 \end{itemize}
 \item 驱动
@@ -65,11 +68,42 @@
 \end{itemize}
 \end{itemize}
 
-FreeRTOS-Plus-FAT 文件系统的标准 API 与标准 C 库使用相同的 errno 值。
+\paragraph{\texttt{ERRNO} 值} \texttt{FreeRTOS-Plus-FAT} 文件系统的标准 API 与标准 C 库使用相同的 \texttt{errno} 值。
+标准 C 库中的文件相关函数返回 0 表示通过，返回 -1 则表示失败。如果返回 -1，则失败的原因 存储在名为 \texttt{errno} 的变量中，须单独检查。 
+同样，\texttt{FreeRTOS-Plus-FAT} 的标准 API 返回 0 表示通过，返回 -1 则表示失败， 该 \texttt{API} 还会针对各项 \texttt{RTOS} 任务维护 \texttt{errno} 变量。
 
-标准 C 库中的文件相关函数返回 0 表示通过，返回 -1 则表示失败。如果返回 -1，则失败的原因 存储在名为 errno 的变量中，须单独检查。 同样，FreeRTOS-Plus-FAT 的标准 API 返回 0 表示通过，返回 -1 则表示失败， 该 API 还会针对各项 RTOS 任务维护 errno 变量。
-\subsubsection{RT-Thread}
+\subsubsection{\texttt{RT-Thread}}
+此文件系统有较多简介，可供设计参考，它的特点是：
+\begin{itemize}
+    \item 为应用程序提供统一的 \texttt{POSIX} 文件和目录操作接口：\texttt{read}、\texttt{write}、\texttt{poll/select} 等。
+    \item 支持多种类型的文件系统，如 \texttt{FatFS}、\texttt{RomFS}、\texttt{DevFS} 等，并提供普通文件、设备文件、网络文件描述符的管理。
+    \item 支持多种类型的存储设备，如 \texttt{SD Card}、\texttt{SPI Flash}、\texttt{Nand Flash} 等。
+\end{itemize}
+\paragraph{POSIX 文件系统接口}
+
+\texttt{POSIX} 表示可移植操作系统接口，\texttt{POSIX} 标准定义了操作系统应该为应用程序提供的接口标准，是 \texttt{IEEE} 为要在各种 \texttt{UNIX} 操作系统上运行的软件而定义的一系列 \texttt{API} 标准的总称。
+
+此标准意在期望获得源代码级别的软件可移植性。换句话说，为一个 \texttt{POSIX} 兼容的操作系统编写的程序，应该可以在任何其它 \texttt{POSIX} 操作系统（即使是来自另一个厂商）上编译执行。\texttt{RT-Thread} 支持 \texttt{POSIX} 标准接口，因此可以很方便的将 Linux/Unix 的程序移植到 RT-Thread 操作系统上。
+
+\paragraph{虚拟文件系统层}
+用户可以将具体的文件系统注册到 \texttt{DFS} 中，如 \texttt{FatFS}、\texttt{RomFS}、\texttt{DevFS} 等，具体介绍请参考其他小节。
+
+\paragraph{设备抽象层}
+设备抽象层将物理设备如 \texttt{SD Card}、\texttt{SPI Flash}、\texttt{Nand Flash}，抽象成符合文件系统能够访问的设备，例如 \texttt{FAT} 文件系统要求存储设备必须是块设备类型。
+
+不同文件系统类型是独立于存储设备驱动而实现的，因此把底层存储设备的驱动接口和文件系统对接起来之后，才可以正确地使用文件系统功能。
 \subsubsection{小结}
+设计 \texttt{VFS} 时，可以参考 \texttt{RT-Thread} 的三层结构组织形式、\texttt{FreeRTOS-Plus-FAT} 的API函数设计理念，将 \texttt{FreeRTOS-Plus-FAT} 继续拓展优化。
+
+例如，可通过以下几点提高\textbf{兼容性}。（利用 \texttt{POSIX} 文件系统接口和与 \texttt{FreeRTOS-Plus-POSIX} 的结合将有可能方便地运行从 \texttt{Linux/Unix} 上移植的程序。
+虽然目前 \texttt{FreeRTOS-Plus-POSIX} 对 \texttt{POSIX API} 的支持还不够充分，但是随着开发实用价值将逐渐上升。）
+
+\begin{itemize}
+    \item 继续采用标准 \texttt{eerno} 值
+    \item 添加 \texttt{POSIX} 文件系统接口
+    \item 添加支持的文件系统（磁盘文件系统、闪存文件系统）
+    \item 拓展支持的实用函数
+\end{itemize}
 
 \subsection{文件系统开发}
 \subsubsection{概述}
@@ -85,10 +119,24 @@ FreeRTOS-Plus-FAT 文件系统的标准 API 与标准 C 库使用相同的 errno
 
 
 \section{前瞻性/重要性分析}
-\subsection{嵌入式文件系统的必要性}
 \subsection{...}
 \section{相关工作}
-\subsection{相关工作一}
+\subsection{\href{https://www.freertos.org/zh-cn-cmn-s/FreeRTOS-Plus/FreeRTOS_Plus_FAT/index.html}{FreeRTOS-Plus-FAT}}
+是本项目的基础，主要使用 C语言 写成。源代码组织简洁，内容完整。但没有文档支持，建议直接阅读代码。
+其主要可借鉴特性：
+\begin{itemize}
+    \item 采用标准 eerno 值
+    \item 项目结构组织清晰
+\end{itemize}
+\subsection{\href{https://www.rt-thread.org/document/site/\#/rt-thread-version/rt-thread-standard/programming-manual/filesystem/filesystem}{RT-Thread/DFS}}
+是RT-Thread的虚拟文件系统实现，文档详尽，可与上一个项目结合理解虚拟文件系统的一些设计理念。
+其主要可借鉴特性：
+\begin{itemize}
+    \item 采用 POSIX 接口
+    \item 目录管理相关使用函数较多
+    \item 有关于文件系统配置方面参数的介绍
+\end{itemize}
+
 \subsection{相关工作二}
 \subsection{相关工作三}
 \subsection{相关工作四}
