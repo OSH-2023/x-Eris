@@ -20,10 +20,63 @@
 \section{项目概述}
 \section{项目背景}
 \subsection{嵌入式操作系统}
+\subsubsection{概述}
+\subsubsection{小结}
+
 \subsection{非虚拟文件系统}
+\subsubsection{概述}
+\subsubsection{小结}
+
 \subsection{虚拟文件系统 - Linux}
+\subsubsection{概述}
+\subsubsection{小结}
+
 \subsection{虚拟文件系统 - 嵌入式}
+\subsubsection{概述}
+本篇报告主要介绍了FreeRTOS-Plus-FAT以及RT-Thread中的文件系统实现细节。
+
+在早期的嵌入式系统中，需要存储的数据比较少，数据类型也比较单一，往往使用直接在存储设备中的指定地址写入数据的方法来存储数据。然而随着嵌入式设备功能的发展，需要存储的数据越来越多，也越来越复杂，这时仍使用旧方法来存储并管理数据就变得非常繁琐困难。
+因此需要新的数据管理方式来简化存储数据的组织形式，需要新的文件系统。
+
+\subsubsection{FreeRTOS-Plus—FAT}
+\begin{itemize}
+\item 主要
+\begin{itemize}
+    \item \texttt{ff\_dir}: 用于访问文件夹中内容
+    \item \texttt{ff\_fat}: 用于访问 FAT 文件系统
+    \item \texttt{ff\_file}: 用于文件读写
+    \item \texttt{ff\_ioman}: 管理缓存和挂载读写对象（介质）
+    \item \texttt{ff\_format}: 格式化或分区介质
+    \item \texttt{ff\_locking}: 加锁？
+    \item \texttt{ff\_memory}: 从内存读取数据
+    \item \texttt{ff\_stdio}: 用于文件管理（统计），相对路径转换
+    \item \texttt{ff\_sys}: 用于映射文件系统到根目录
+\end{itemize}
+\item 辅助
+\begin{itemize}
+    \item \texttt{ff\_headers}: 管理所有头文件
+    \item \texttt{ff\_time}: 获取时间
+    \item \texttt{ff\_error}:  用于错误处理
+    \item \texttt{ff\_crc}: 用于计算 CRC（循环检验码）
+    \item \texttt{ff\_string}: 字符串库
+\end{itemize}
+\item 驱动
+\begin{itemize}
+    \item 各处理器相应的文件系统驱动
+\end{itemize}
+\end{itemize}
+
+FreeRTOS-Plus-FAT 文件系统的标准 API 与标准 C 库使用相同的 errno 值。
+
+标准 C 库中的文件相关函数返回 0 表示通过，返回 -1 则表示失败。如果返回 -1，则失败的原因 存储在名为 errno 的变量中，须单独检查。 同样，FreeRTOS-Plus-FAT 的标准 API 返回 0 表示通过，返回 -1 则表示失败， 该 API 还会针对各项 RTOS 任务维护 errno 变量。
+\subsubsection{RT-Thread}
+\subsubsection{小结}
+
 \subsection{文件系统开发}
+\subsubsection{概述}
+\subsubsection{小结}
+
+\newpage
 \section{立项依据}
 
 %\begin{figure}[H]
