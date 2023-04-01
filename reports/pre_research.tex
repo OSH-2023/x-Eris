@@ -438,7 +438,14 @@ VFS
     \item 有关于文件系统配置方面参数的介绍
 \end{itemize}
 
-\subsection{相关工作二}
+\subsection{非顺序保留缓存与新型崩溃安全准则}
+该篇文章\href{run:./ref/Modular Integration of Crashsafe Caching into a Verified Virtual File System Switch.pdf}{A Virtual File System for IoT Service Platform Based on Linux FUSE}
+展示了如何向虚拟文件系统交换机(VFS)添加非顺序保留缓存，
+并提供了一个适用于这种缓存特性的新型崩溃安全准则。
+针对每个单独的文件，可以通过构建一条替代的运行路径来解释断电事件，
+该路径中自上次同步该文件以来的所有写入都写了一个前缀，
+以实现在断电后安全恢复文件。
+
 \subsection{相关工作三}
 \subsection{相关工作四}
 \subsection{相关工作五}
