@@ -4,7 +4,7 @@
 \usepackage{graphicx}
 \usepackage{subfigure}
 % \usepackage{ctex}
-\usepackage{float} 
+% \usepackage{float} 
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{amsmath}
@@ -193,9 +193,157 @@ FAT16/32、ext2/3/4、LittleFS、ROMFS、NFFS以及CFS等
 根据以上调研，考虑到FreeRTOS具有实时性和可靠性等特点,支持多种处理器架构和无线技术,提供了一系列的驱动程序和库的优点，我们选用FreeRTOS作为我们的操作系统，并且基于FreeRTOS-Plus-FAT该库进行一些拓展。
 根据其他操作系统所支持的文件系统可知FAT,littlefa,RAMFS，ROMFS等可作为我们考虑扩展的文件系统，并且可参考其他操作系统文件系统实现方式对FreeRTOS进行改造和创新。
 
-\subsection{非虚拟文件系统}
+\subsection{文件系统}
 \subsubsection{概述}
+操作系统中负责管理和存储文件信息的软件机构称为文件管理系统，简称文件系统。
+文件系统是操作系统用于明确存储设备（常见的是磁盘，也有基于NAND Flash的固态硬盘）
+或分区上的文件的方法和数据结构；即在存储设备上组织文件的方法。文件系统由三部分组成：
+文件系统的接口，对对象操纵和管理的软件集合，对象及属性。
+
+本部分将介绍部分常用的文件系统。
+\subsubsection{FATFS}
+\begin{itemize}
+\item 简介
+
+FATFS是一个完全免费开源的FAT 文件系统模块，专门为小型的嵌入式系统而设计。
+完全用标准C 语言编写，所以具有良好的硬件平台独立性。它支持FATl2、FATl6 和FAT32，
+支持多个存储媒介；有独立的缓冲区，可以对多个文件进行读／写，并特别对8 位单片机和16 位单片机做了优化。
+
+\item 存储结构
+	\begin{itemize}  
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.9\textwidth]{FatFs.png}
+			\caption{FATFS的存储结构}
+		\end{figure}
+	\item Boot Sector ：包含BIOS参数块，该参数块存储有关卷布局和文件系统结构的信息，以及加载Windows 的引导代码。
+	\item Reserved Sectors ：在第一个FAT开始之前的扇区数量，包括引导扇区。 
+	\item FAT 1 : 原始FAT表 。
+	\item FAT 2 : FAT表的备份 。
+	\item Root folder ：描述根目录分区中的文件和文件夹。
+	\item Other folders and all files ： 包含文件系统中文件和文件夹的数据。 
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{ext4}
+\begin{itemize}
+\item 简介
+
+第四代扩展文件系统（ext4）是Linux系统下的日志文件系统，ext4 使用 48 位的内部寻址，
+理论上可以在文件系统上分配高达 16 TiB 大小的文件。在早期 ext4 的实现中有些用户空间的程序
+仍然将其限制为最大大小为 16 TiB 的文件系统，但截至 2011 年，e2fsprogs 已经直接支持大于 16 TiB 大小的 ext4 文件系统。
+
+\item 存储结构
+
+Ext4文件系统把整个分区划分成各个block group（块组），
+每个block group由superblock(超级块)，block group(区块群组)，
+ block bitmap(区块对照表)， inode bitmap(inode 对照表)和
+ group descriptor以及inode table、data block组成。
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\textwidth]{ext4.png}
+		\caption{ext4的存储结构}
+	\end{figure}
+\end{itemize}
+\subsubsection{XFS}
+\begin{itemize}
+\item 简介
+XFS是一个日志型的文件系统，能在断电以及操作系统崩溃的情况下保证数据的一致性。
+XFS最早是针对IRIX操作系统开发的，后来移植到linux上，目前CentOS 7已将XFS作为默认的文件系统。
+\item 存储结构
+XFS文件系统内部被分为多个大小相同的“分配组（AG）”，每个AG可以看成独立维护自己空间的文件系统。
+
+AG有如下特点：
+	\begin{itemize}
+	\item 一个描述整个文件系统的超级块
+	\item 空闲空间管理
+	\item Inode分配和追踪
+	\item 反向块映射索引
+	\item 数据块引用计数索引
+	\end{itemize}
+整个文件系统的空闲空间和所有inode数量只由第一个AG（primary）维护。通过mkfs.xfs格式化后，主AG的磁盘布局如图3所示。
+	\begin{figure}[htb]
+		\centering
+		\includegraphics[width=0.9\textwidth]{XFS.png}
+		\caption{XFS中AG的磁盘布局}
+	\end{figure}
+\end{itemize}
+
+\subsubsection{jffs2}
+\begin{itemize}
+\item 简介
+JFFS2(Journalling Flash File System Version2)是一个日志结构的文件系统，包含数据和原数据的节点在闪存上顺序的存储。
+\item 存储结构
+JFFS2在Flash上​​只有两种类型的数据实体：jffs2\_raw\_inode和jffs2\_raw\_dirent。
+前者包含文件的管理信息，后者用于描述文件在文件系统中的位置。
+真正的数据信息就保持在jffs2\_raw\_inode节点的后面。下图为flash中数据实体的逻辑分布，
+物理上所有的数据实体离散分布，位置由写入时Flash中空闲空间位置决定。
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\textwidth]{jffs2.png}
+		\caption{jffs2下数据实体的逻辑分布}
+	\end{figure}
+\end{itemize}
+
+\subsubsection{ubifs}
+\begin{itemize}
+\item 简介
+UBIFS（），用于裸的flash设备，作为jffs2的后继文件系统之一。
+\item 存储结构
+ubifs文件系统将整个磁盘空间划分为superblock、master、log、lpt、orphan和main六个区域，其区域划分如下所图所示：
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\textwidth]{UBIFS.png}
+		\caption{ubifs对磁盘空间的划分}
+	\end{figure}
+	\begin{itemize}
+		\item superblock区域固定占用LEB0，master区域固定占用LEB1和LEB2，其他区域占据的LEB数量则视该文件系统分区实际占有的总的LEB数量而定，orphan区域一般占用1到2个LEB。superblock区域保存文件系统的固定参数，参数在格式化时写入，除了leb\_cnt元素和UBIFS\_FLG\_SPACE\_FIXUP标志位会在首次挂载时被改变，其他元素皆为只读。
+		\item master区域中的两个LEB相互备份，以确保在异常掉电的情况能够恢复master区域的内容。master区域的数据在每次发生commit的时候进行更新。
+		\item log区域记录日志数据的存储位置lnum:offs。ubifs是一种日志文件系统，文件数据采用异地更新的方式（out\_of\_place\_update），即文件数据的更新不会每次都同步到flash，而是记录到日志区，当日志区的数据累计到一定程度时，才将数据同步到flash中。
+		\item lpt区域记录了磁盘空间中各个LEB的状态（free、dirty、flag），用于实现对LEB的分配、回收和状态查询。
+		\item main区域则保存文件的数据和索引。
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{f2fs}
+\begin{itemize}
+\item 简介
+F2FS（Flash-Friendly File System）是一种闪存文件系统，此文件系统起初是为了NAND闪存的存储设备设计（诸如固态硬盘、eMMC和SD卡），这些设备广泛存在于自移动设备至服务器领域。
+\item 存储结构
+F2FS将整个卷分成多个段（segment），每个段固定为2 MB。一个节（section）由连续的段组成，一个区（zone）由一组节组成。默认情况下，节与区被设置为相同的大小，但用户可以用mkfs轻松修改大小。F2FS将整个卷划分为六个区域，除了超级块（superblock）以外的所有区都由多个段组成。
+
+	\begin{itemize}
+		\item 超级块（Superblock）
+		超级块位于分区起始处，共有两个副本以避免文件系统损坏。它包含基本的分区信息和一些默认的F2FS参数。
+		\item 检查点（Checkpoint）
+		检查点包含文件系统信息，有效NAT/SIT集的位图，孤立inode列表，以及当前活动段的摘要条目。
+		\item 段信息表（SIT）
+		段信息表包含主区域块的有效块数量和有效位图。
+		\item 节点地址表（NAT）
+		节点信息表主区域节点块的地址表。
+		\item 段摘要区（SSA）
+		段摘要区包含的条目包含主区域数据和节点块的所有者信息。
+		\item 主区域（Main Area）
+		主区域包含文件和目录数据及其索引。
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{romfs}
+传统型的Romfs文件系统是最常使用的一种文件系统，它是一种简单的、紧凑的、只读的文件系统，不支持动态擦写保存;它按顺序存放所有的文件数据，因此在系统运行时，可以获得可观的RAM节省空间
+romfs的主要目的是拥有一个非常小的内核，它只链接了这个文件系统，然后可以在以后使用当前的模块实用程序加载任何模块。
+
+romfs在块设备上运行，并且底层结构非常简单。为了快速访问，每个可访问的结构都从16字节边界开始。文件占用的最小空间为32字节。
+romfs系统中最大文件的大小理论上可以达到4G，文件名的大小一般小于16字节，而且整个文件系统都是以16字节来对齐。romfs映像开始16字节对应struct romfs_super_block结构体，后为romfs映像的卷标。
+紧随卷标之后的就是第一个文件的文件头romfs_inode结构，共16字节，之后就是文件名，也是16字节对齐，然后才是文件内容。其中在每个文件的文件头中的前4字节（不包括低4位）为下一个文件头在romfs映像中的偏移。
+下图左侧为superblock的结构，右为romfs_inode即文件头的格式。
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.9\textwidth]{romfs.png}
+		\caption{romfs的文件系统布局和文件结构}
+	\end{figure}
 \subsubsection{小结}
+根据以上对文件系统的调研和小组讨论，我们初步决定基于FreeRTOS-Plus-FAT添加jffs2和romfs作为可支持的文件系统。其他则作为参考和备选方案。
 
 \subsection{虚拟文件系统 - Linux}
 \subsubsection{概述}
@@ -275,7 +423,7 @@ CD-ROM 文件系统或 CDFS）。
 在这个域中，一个用户空间应用程序激发
 \href{https://en.wikipedia.org/wiki/POSIX}{POSIX} open call 通过
 \href{https://en.wikipedia.org/wiki/GNU}{GNU} C
-库（\href{https://en.wikipedia.org/wiki/Glibc}{glibc}）
+库（\href{https://en.wikipedia.org/wiki/Glibc}{glibc}）v
 进入内核并进入系统调用解多路器。最终，使用
 \code{sys\_open} 调用 VFS。
 
