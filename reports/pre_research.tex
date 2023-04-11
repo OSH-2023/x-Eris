@@ -3,7 +3,7 @@
 \usepackage[text={165mm,245mm}]{geometry}
 \usepackage{graphicx}
 \usepackage{subfigure}
-\usepackage{ctex}
+% \usepackage{ctex} 
 \usepackage{float} 
 \usepackage{listings}
 \usepackage{xcolor}
@@ -20,7 +20,12 @@
 \title{\textbf{x-Eris 调研报告}}
 \author{小组成员：胡天羽，罗胤玻，李润时，万辰希，吴书让}
 \begin{document}
+
 \maketitle
+
+\newpage
+\tableofcontents
+\newpage
 
 \section{项目概述}
 随着嵌入式设备的存储空间容量也不断上升，原先的通过直接对指定地址写入数据的交互方式不再可行。因此，嵌入式系统需要有统一的文件系统来简化数据的存储组织方式。FreeRTOS是目前使用率最高的嵌入式系统之一，但是其文件系统并不完善。本项目旨在基于现有的FreeRTOS的虚拟文件系统模块FreeRTOS-Plus-Fat进行兼容性拓展及安全性能优化。
