@@ -20,7 +20,8 @@ The course project of the Operating Systems (H), USTC, 2023.
 | 2022.3.24🌃 | 调研报告分工 | [pre_research_2](/reports/pre_discussion/2023_03_24/meeting.md) |              |
 | 2022.3.27🌆 | 选题方向咨询 | [pre_research_2](/reports/pre_discussion/2023_03_24/meeting.md) |  老师参与     |
 | 2022.3.30🌃 | 完善调研报告 | [pre_research_3](/reports/pre_discussion/2023_03_30/meeting.md) |              |
-| 2022.4.3🌃 | 可行性报告分工 | [feasibility](/reports/pre_discussion/2023_04_03/meeting.md) |              |
+| 2022.4.3🌃 | 可行性报告分工 | [feasibility_1](/reports/pre_discussion/2023_04_03/meeting.md) |              |
+| 2022.4.11🌃 | 可行性报告讨论 | [feasibility_2](/reports/pre_discussion/2023_04_11/meeting.md) |              |
 
 
 ## 📂 文件说明 Folder Description
