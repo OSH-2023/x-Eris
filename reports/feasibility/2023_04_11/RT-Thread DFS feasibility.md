@@ -14,7 +14,7 @@ RT-Thread DFS 组件的主要功能特点有：
 -   支持多种类型的存储设备，如 SD Card、SPI Flash、Nand Flash 等。
 
 DFS 的层次架构如下图所示，主要分为 POSIX 接口层、虚拟文件系统层和设备抽象层。
-![](attachments\DFS层次架构.png)
+![](attachments/DFS层次架构.png)
 
 - POSIX接口层：一套API接口规范
 - 虚拟文件系统层：注册具体的文件系统
