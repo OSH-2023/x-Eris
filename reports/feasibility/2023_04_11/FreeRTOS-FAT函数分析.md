@@ -8,7 +8,7 @@
 size_t ff_fread( void * pvBuffer,size_t xSize,size_t xItems,FF_FILE * pxStream )
 	|--int32_t FF_Read( FF_FILE * pxFile,uint32_t ulElementSize,uint32_t ulCount,uint8_t * pucBuffer )
 		|--FF_ReadPartial();FF_BlockRead();FF_ReadClusters();
-			|--FF_GetBuffer,FF_ReleaseBuffer
+			|--FF_GetBuffer,FF_ReleaseBuffer，FF_BlockRead()，FF_BlockWrite()
                 |--FF_PendSemaphore( pxIOManager->pvSemaphore );FF_ReleaseSemaphore( pxIOManager->pvSemaphore );
 ```
 
