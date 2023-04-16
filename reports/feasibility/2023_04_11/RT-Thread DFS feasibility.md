@@ -1,3 +1,22 @@
+## 技术路线大致思路
+- 前期准备（可行性报告内容）：
+	- 配置运行FreeRTOS环境
+	- 挂载FreeRTOS-Plus-FAT，并参考其过程设计本项目挂载配置
+	- 挂载FreeRTOS-Plus-POSIX？（扩展其接口数量？）
+	- 分析并归纳出FreeRTOS挂载文件系统的所需接口
+	- 参考RT-Thread DFS设计，分析归纳出本项目主体结构与接口设计
+	- 大致确定需要支持的文件系统（已在调研报告中初步拟定）
+	- 大致拟定项目效果测试的方案和预期效果（已在调研报告中初步涉及）
+- 项目主体：
+	- 内核层->VFS：为适应FreeRTOS的接口设计（扩展FreeRTOS-Plus-POSIX？或是直接使用内核接口）
+	- VFS设计：
+		- VFS的实际功能，函数层层调用，最终下放到文件系统的具体过程；
+		- VFS的抽象功能，如初始化文件系统，实现挂载、卸载等
+		- VFS的附加功能，如缓存
+	- VFS->FS：实现不同FS的接口并最终挂载
+- 效果测试：使用前述方案测试VFS效果并评价
+
+
 [官方文档：虚拟文件系统 (rt-thread.org)](https://www.rt-thread.org/document/site/#/rt-thread-version/rt-thread-standard/programming-manual/filesystem/filesystem)
 ## RT-Thread DFS简介
 ### DFS结构与功能
