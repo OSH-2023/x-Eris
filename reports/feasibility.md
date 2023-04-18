@@ -141,58 +141,16 @@ DFS 的层次架构如下图所示，主要分为 POSIX 接口层、虚拟文件
 `dfs_init()`
 - declaration: `rt-thread/components/dfs/dfs_v2/include/dfs.h` line79
 - code: `rt-thread/components/dfs/dfs_v2/src/dfs.c` line 48
-```C
-int dfs_init(void) {
-    static rt_bool_t init_ok = RT_FALSE;
-    if (init_ok) {
-        rt_kprintf("dfs already init.\n");
-        return 0;
-    }
-
-    /* init vnode hash table */
-    dfs_vnode_mgr_init();
-
-    /* clear filesystem operations table */
-    rt_memset((void *)filesystem_operation_table, 0, sizeof(filesystem_operation_table));
-
-    /* clear filesystem table */
-    rt_memset(filesystem_table, 0, sizeof(filesystem_table));
-
-    /* clean fd table */
-    rt_memset(&_fdtab, 0, sizeof(_fdtab));
-
-    /* create device filesystem lock */
-    rt_mutex_init(&fslock, "fslock", RT_IPC_FLAG_PRIO);
-    rt_mutex_init(&fdlock, "fdlock", RT_IPC_FLAG_PRIO);
-
-    #ifdef DFS_USING_WORKDIR
-
-        /* set current working directory */
-
-        rt_memset(working_directory, 0, sizeof(working_directory));
-
-        working_directory[0] = '/';
-
-    #endif
-
-    ......
-
-    init_ok = RT_TRUE;
-
-    return 0;
-}
-
-```
 
 **dfs_init()主要完成了以下工作：**
 1. 清理
-    1. vnode初始化
-    2. 清理文件系统操作函数表（filesystem_operation_table）
-    3. 清理文件系统挂载表（filesystem table）
-    4. 清理文件描述符表（fd table）
+    1. vnode初始化 `dfs_vnode_mgr_init();`
+    2. 清理文件系统操作函数表（filesystem_operation_table）`memset((void *)filesystem_operation_table,...);`
+    3. 清理文件系统挂载表（filesystem table）`memset(filesystem_table, ...);`
+    4. 清理文件描述符表（fd table）`    memset(&_fdtab,...);`
 2. 初始化
-	1. 设置设备文件系统锁
-	2. 创建当前工作目录
+	1. 设置设备文件系统锁 `rt_mutex_init(&fslock,...);rt_mutex_init(&fdlock, ...);`
+	2. 创建当前工作目录 `memset(working_directory, ...);`
 	3. 设置临时文件系统tmpfs（暂不考虑在本项目中实现）
 	4. 若选择使用devfs，则立即初始化其内容
 
@@ -201,48 +159,11 @@ int dfs_init(void) {
 - declaration: `rt-thread/components/dfs/dfs_v2/include/dfs_fs.h` line 78
 - code: `rt-thread/components/dfs/dfs_v2/src/dfs_fs.c` line 31
 
-```C
-int dfs_register(const struct dfs_filesystem_ops *ops) {
-    int ret = RT_EOK;
-    const struct dfs_filesystem_ops **empty = NULL;
-    const struct dfs_filesystem_ops **iter;
-
-    /* lock filesystem */
-    dfs_lock();
-
-    /* check if this filesystem was already registered */
-    for (iter = &filesystem_operation_table[0];iter < &filesystem_operation_table[DFS_FILESYSTEM_TYPES_MAX]; iter ++) {
-        /* find out an empty filesystem type entry */
-        if (*iter == NULL) 
-            (empty == NULL) ? (empty = iter) : 0;
-        else if (strcmp((*iter)->name, ops->name) == 0) {
-            rt_set_errno(-EEXIST);
-            ret = -1;
-            break;
-        }
-    }
-
-    /* save the filesystem's operations */
-    if (empty == NULL) {
-        rt_set_errno(-ENOSPC);
-        LOG_E("There is no space to register this file system (%s).", ops->name);
-        ret = -1;
-    }
-    else if (ret == RT_EOK) {
-        *empty = ops;
-    }
-
-    dfs_unlock();
-
-    return ret;
-}
-```
-
 **dfs_register()主要完成以下工作：**
-1. 锁定文件系统
-2. 检测该文件系统是否已注册
-3. 保存该文件系统的操作函数表
-4. 解锁文件系统
+1. 锁定文件系统 `dfs_lock();`
+2. 检测该文件系统是否已注册：`for循环遍历filesystem_operation_table，判断函数是否已存在并寻找新函数插入位置，保存进empty`
+3. 保存该文件系统的操作函数表 `*empty = ops;`
+4. 解锁文件系统 `dfs_unlock();`
 
 ##### 存储设备上注册块设备
 块设备抽象可由存储设备接口或底层的文件系统完成，比如：SPI Flash可使用SFUD库组件；FATFS的`disk_initialize()`用于初始化存储设备等。
@@ -251,242 +172,80 @@ int dfs_register(const struct dfs_filesystem_ops *ops) {
 `dfs_mkfs()`
 - declaration: `rt-thread/components/dfs/dfs_v2/include/dfs_fs.h` line 93
 - code: `rt-thread/components/dfs/dfs_v2/src/dfs_fs.c` line 432
-```C
-int dfs_mkfs(const char *fs_name, const char *device_name) {
-    int index;
-    rt_device_t dev_id = NULL;
-
-    /* check device name, and it should not be NULL */
-    if (device_name != NULL) dev_id = rt_device_find(device_name);
-    
-    if (dev_id == NULL) {
-        rt_set_errno(-ENODEV);
-        LOG_E("Device (%s) was not found", device_name);
-        return -1;
-    }
-
-    /* lock file system */
-    dfs_lock();
-
-    /* find the file system operations */
-    for (index = 0; index < DFS_FILESYSTEM_TYPES_MAX; index ++) {
-        if (filesystem_operation_table[index] != NULL &&
-        strncmp(filesystem_operation_table[index]->name, fs_name,
-        strlen(filesystem_operation_table[index]->name)) == 0)
-        break;
-    }
-
-    dfs_unlock();
-
-    if (index < DFS_FILESYSTEM_TYPES_MAX) {
-        /* find file system operation */
-        const struct dfs_filesystem_ops *ops = filesystem_operation_table[index];
-        if (ops->mkfs == NULL) {
-            LOG_E("The file system (%s) mkfs function was not implement", fs_name);
-            rt_set_errno(-ENOSYS);
-            return -1;
-        }
-        return ops->mkfs(dev_id, fs_name);
-    }
-
-    LOG_E("File system (%s) was not found.", fs_name);
-    return -1;
-}
-```
 
 **dfs_mkfs()主要完成了以下工作：**
-1. 检查设备是否存在
-2. 锁定文件系统
-3. 查找该文件系统的操作函数
-4. 解锁该文件系统
-5. 调用该文件系统自带的mkfs函数
+1. 检查设备是否存在 `dev_id = rt_device_find(device_name);`
+2. 锁定文件系统 `dfs_lock();`
+3. 查找该文件系统的操作函数 `for循环遍历filesystem_operation_table，找到mkfs函数`
+4. 解锁该文件系统 `dfs_unlock();`
+5. 调用该文件系统自带的mkfs函数 `return ops->mkfs(dev_id, fs_name);`
 
 ##### 挂载文件系统
 `dfs_mount()`
 - declaration: `rt-thread/components/dfs/dfs_v2/include/dfs_fs.h` line 86
 - code : `rt-thread/components/dfs/dfs_v2/src/dfs_fs.c` line 214
-```C
-int dfs_mount(const char *device_name, const char *path, const char *filesystemtype, unsigned long rwflag, const void *data) {
 
-    const struct dfs_filesystem_ops **ops;
-    struct dfs_filesystem *iter;
-    struct dfs_filesystem *fs = NULL;
-    char *fullpath = NULL;
-    rt_device_t dev_id;
-
-    /* open specific device */
-    if (device_name == NULL) {
-        /* which is a non-device filesystem mount */
-        dev_id = NULL;
-    } else if ((dev_id = rt_device_find(device_name)) == NULL) {
-        /* no this device */
-        rt_set_errno(-ENODEV);
-        return -1;
-    }
-
-    /* find out the specific filesystem */
-    dfs_lock();
-    for (ops = &filesystem_operation_table[0]; ops < &filesystem_operation_table[DFS_FILESYSTEM_TYPES_MAX]; ops++)
-        if ((*ops != NULL) && (strncmp((*ops)->name, filesystemtype, strlen((*ops)->name)) == 0)) break;
-    dfs_unlock();
-
-    if (ops == &filesystem_operation_table[DFS_FILESYSTEM_TYPES_MAX]) {
-        /* can't find filesystem */
-        rt_set_errno(-ENODEV);
-        return -1;
-    }
-
-    /* check if there is mount implementation */
-    if ((*ops == NULL) || ((*ops)->mount == NULL)) {
-        rt_set_errno(-ENOSYS);
-        return -1;
-    }
-
-    /* make full path for special file */
-    fullpath = dfs_normalize_path(NULL, path);
-    /* not an abstract path */
-    if (fullpath == NULL) {
-        rt_set_errno(-ENOTDIR);
-        return -1;
-    }
-
-    /* Check if the path exists or not, raw APIs call, fixme */
-    if ((strcmp(fullpath, "/") != 0) && (strcmp(fullpath, "/dev") != 0)) {
-        struct dfs_file fd;
-        fd_init(&fd);
-        if (dfs_file_open(&fd, fullpath, O_RDONLY | O_DIRECTORY) < 0) {
-            rt_free(fullpath);
-            rt_set_errno(-ENOTDIR);
-            return -1;
-        }
-        dfs_file_close(&fd);
-    }
-
-    /* check whether the file system mounted or not in the filesystem table
-    * if it is unmounted yet, find out an empty entry */
-    dfs_lock();
-    for (iter = &filesystem_table[0]; iter < &filesystem_table[DFS_FILESYSTEMS_MAX]; iter++) {
-        /* check if it is an empty filesystem table entry? if it is, save fs */
-        if (iter->ops == NULL) (fs == NULL) ? (fs = iter) : 0;
-        /* check if the PATH is mounted */
-        else if (strcmp(iter->path, path) == 0) {
-            rt_set_errno(-EINVAL);
-            goto err1;
-        }
-    }
-    if ((fs == NULL) && (iter == &filesystem_table[DFS_FILESYSTEMS_MAX])) {
-        rt_set_errno(-ENOSPC);
-        LOG_E("There is no space to mount this file system (%s).", filesystemtype);
-        goto err1;
-    }
-
-    /* register file system */
-    fs->path = fullpath;
-    fs->ops = *ops;
-    fs->dev_id = dev_id;
-
-    /* For UFS, record the real filesystem name */
-    fs->data = (void *) filesystemtype;
-
-    /* release filesystem_table lock */
-    dfs_unlock();
-
-    /* open device, but do not check the status of device */
-    if (dev_id != NULL) {
-        if (rt_device_open(fs->dev_id, RT_DEVICE_OFLAG_RDWR) != RT_EOK) {
-            /* The underlying device has error, clear the entry. */
-            dfs_lock();
-            rt_memset(fs, 0, sizeof(struct dfs_filesystem));
-            goto err1;
-        }
-    }
-
-    /* call mount of this filesystem */
-    if ((*ops)->mount(fs, rwflag, data) < 0) {
-        /* close device */
-        if (dev_id != NULL) rt_device_close(fs->dev_id);
-        /* mount failed */
-        dfs_lock();
-        /* clear filesystem table entry */
-        rt_memset(fs, 0, sizeof(struct dfs_filesystem));
-        goto err1;  
-    }
-    return 0;
-
-    err1:
-
-        dfs_unlock();
-
-        rt_free(fullpath);
-
-        return -1;
-
-}
-```
 **dfs_mount()主要完成了以下工作：**
-1. 打开指定设备：无设备挂载；有设备挂载；设备未找到
-2. 查找该文件系统，即操作函数表
-3. 设置文件的路径
-4. 未挂载的文件系统准备空间
-5. 打开设备
-6. 调用文件系统自带的挂载函数
+1. 打开指定设备：无设备挂载；有设备挂载；设备未找到 `dev_id = rt_device_find(device_name)`
+2. 查找该文件系统，即操作函数表 `for循环遍历filesystem_operation_table，找到相应函数位置`
+3. 检测文件系统是否已有挂载函数 `*ops == NULL) || (*ops)->mount == NULL`
+4. 设置文件的路径 `fullpath = dfs_normalize_path(NULL, path);`
+5. 检测文件系统是否挂载并为未挂载的文件系统准备空间 `for循环遍历filesystem_table`
+6. 打开设备 `rt_device_open(fs->dev_id, RT_DEVICE_OFLAG_RDWR)`
+7. 调用文件系统自带的挂载函数 `(*ops)->mount(fs, rwflag, data)`
 
 ##### 卸载文件系统
 `dfs_unmount()`
 - declaration: `rt-thread/components/dfs/dfs_v2/include/dfs_fs.h` line 96
 - code : `rt-thread/components/dfs/dfs_v2/src/dfs_fs.c` line 367
-```C
-int dfs_unmount(const char *specialfile) {
 
-    char *fullpath;
-    struct dfs_filesystem *iter;
-    struct dfs_filesystem *fs = NULL;
-    fullpath = dfs_normalize_path(NULL, specialfile);
-    if (fullpath == NULL) {
-        rt_set_errno(-ENOTDIR);
-        return -1;
-    }
-
-    /* lock filesystem */
-    dfs_lock();
-
-    for (iter = &filesystem_table[0]; iter < &filesystem_table[DFS_FILESYSTEMS_MAX]; iter++) {
-        /* check if the PATH is mounted */
-        if ((iter->path != NULL) && (strcmp(iter->path, fullpath) == 0)) {
-        fs = iter;
-        break;
-        }
-    }
-
-    if (fs == NULL || fs->ops->unmount == NULL || fs->ops->unmount(fs) < 0) {
-        goto err1;
-    }
-
-    /* close device, but do not check the status of device */
-    if (fs->dev_id != NULL) rt_device_close(fs->dev_id);
-    if (fs->path != NULL) rt_free(fs->path);
-
-    /* clear this filesystem table entry */
-    rt_memset(fs, 0, sizeof(struct dfs_filesystem));
-    dfs_unlock();
-    rt_free(fullpath);
-    return 0;
-    
-    err1:
-        dfs_unlock();
-        rt_free(fullpath);
-        return -1;
-
-}
-```
 **dfs_unmount()主要完成了以下工作：**
-1. 锁定文件系统
-2. 清理相应的文件系统操作函数表、文件系统表
+1. 锁定文件系统 `dfs_lock()`
+2. 清理相应的文件系统操作函数表、文件系统表`memset((void *)filesystem_operation_table,...);memset(filesystem_table, ...);`
 
 #### 总结
-以上简述了RT-Thread的虚拟文件系统（DFS）的运作流程，着重分析了`dfs_init()`、`dfs_register()`等函数的代码。可以看到，DFS的运作流程清晰明了，上承内核，下接文件系统，合理利用了前述的抽象设计，为本项目的运作流程提供了重要参考思路。
+以上简述了RT-Thread的虚拟文件系统（DFS）的运作流程，着重分析了`dfs_init()`、`dfs_register()`等函数的代码运作流程及具体实现方式。可以看到，DFS的运作流程清晰明了，上承内核，下接文件系统，合理利用了前述的抽象设计，为本项目的运作流程提供了重要参考思路。
 ### 各个文件系统的格式区别
 ### 缓存
+#### 文件缓存简介
+- **文件缓存的基本原理：** 可以看到文件缓存介于内核的文件操作与底层文件系统之间，就必要性而言，文件缓存是不需要的，但是在实际场景中磁盘访问速度较慢，使用缓存可以有效减少磁盘访问次数，所以文件缓存可以有效提升文件系统的性能。
+
+- **文件缓存的使用场景：** 缓存的有效提升缓存的前提是应用需要反复读取同一批文件。如果应用对数据是「读取一次，然后再也不需要」的访问模式（比如大数据的数据清洗），可以关闭缓存功能，省去缓存不断建立，又反复淘汰的开销。
+
+- **文件缓存的机制介绍：** 文件缓存一般大致可以分为元数据缓存与数据读写缓存
+	- **I/O缓存：** 在 I/O 过程中，读取磁盘的速度相对内存读取速度要慢的多。为了提高 I/O 的效率，操作系统在内存中开辟一块缓冲区，用于暂时存放从磁盘读入或写入磁盘的数据。这个缓冲区就是 IO 缓冲区。
+	- **元数据缓存：** 元数据缓存是指在计算机系统中，为了提高文件系统的性能，将文件系统的元数据（如文件名、文件大小、创建时间等）缓存在内存中，以便快速访问。
+	- **元数据缓存和I/O缓存的区别**，缓存I/O使用了操作系统内核缓冲区，在一定程度上分离了应用程序空间和实际的物理设备，可以减少读盘的次数，提高性能。而元数据缓存是指文件系统为了加速文件系统操作而维护的一个内存缓存，它保存了文件系统中的一些元数据信息，如文件名、文件大小、权限等等。当应用程序需要访问某个文件时，首先会在元数据缓存中查找该文件的元数据信息，如果找到了，则可以直接访问该文件。
+
+#### 文件缓存实现范例参考
+##### Linux文件缓存——IO缓存
+<font color = RED>以下以最简单的read(), write()为例分析</font>
+
+1. read与write的层层调用
+    - `read`与`write`的系统调用直接调用了`vfs_read`以及`vfs_write`
+    - `vfs_read`调用`file->f_op->read` 或者 `file->f_op->read_iter`
+    - `vfs_write`调用`file->f_op->write` 或者 `file->f_op->write_iter`
+    - 继续调用`ext4_file_read_ite`r 和 `ext4_file_write_iter`
+    - `ext4_file_read_iter` 调用 `generic_file_read_iter`
+    - `ext4_file_write_iter` 调用 `generic_file_write_iter`
+    - `generic_file_read_iter` 和 `generic_file_write_iter`判断是否使用缓存，如果设置了`IOCB_DIRECT`标志就使用直接IO，否则使用缓存IO
+2. 缓存IO的运行流程
+    - 首先查找缓存中是否存在相应的缓存页，如果没有找到，不但需要读取这一页的内容，还需要进行预读，这些在 `page_cache_sync_readahead` 中实现。
+    - 找到相应的缓存页后，调用`copy_page_to_iter`，将缓存页的内容拷贝回用户内存空间
+
+##### JuiceFS文件缓存——元数据缓存
+内核中可以缓存三种元数据：属性(attribute)、文件项(entry)和目录项(direntry)，可以通过以下挂载参数控制缓存时间：
+```C
+--attr-cache value       属性缓存时长，单位秒 (默认值: 1)
+--entry-cache value      文件项缓存时长，单位秒 (默认值: 1)
+--dir-entry-cache value  目录项缓存时长，单位秒 (默认值: 1)
+```
+
+JuiceFS 客户端在 open() 操作即打开一个文件时，其文件属性（attribute）会被自动缓存在客户端内存中。如果在挂载文件系统时设置了 --open-cache 选项且值大于 0，只要缓存尚未超时失效，随后执行的 getattr() 和 open() 操作会从内存缓存中立即返回结果。
+
+##### 总结
+以上简述了IO缓存与元数据缓存两种缓存方式的原理与区别，并对Linux的IO缓存与JuiceFS的元数据缓存的实现做了简要的分析，为本项目计划实现的类似于Linux的文件缓存机制提供了优秀的范本。
+
 ## 技术依据
 ### 使用QEMU搭建FreeRTOS系统的可行性
 ### 使用QEMU进行文件系统开发的可行性（挂载相关）
@@ -502,7 +261,10 @@ int dfs_unmount(const char *specialfile) {
 ### 安全性
 由函数分析可知，FreeRTOS与文件系统的信息传递主要通过信号量的传递来完成，能够有效防止竞争条件，确保线程/进程之间的同步，避免出现死锁等情况。可以提高系统的稳定性、可靠性和安全性，避免出现许多常见的线程/进程同步问题。
 
-### 缓存 - 性能 【lyb】
+### 缓存 - 性能提升
+文件系统缓存将最近访问过的或常使用文件数据存储在内存中，以便下次访问时可以更快地读取。这样可以避免频繁地从磁盘读取数据，从而提高了文件系统的性能。
+
+本项目计划在对文件的管理中添加上缓存功能，从而提升文件系统的性能，使得用户在使用时能够获得更加快捷的体验。
 ### POSIX接口
 本项目计划在最上层添加对POSIX标准的支持，使得用户在FreeRTOS中也可以使用POSIX标准文件操作函数来操作文件系统。
 
