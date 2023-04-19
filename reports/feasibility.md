@@ -247,9 +247,61 @@ JuiceFS 客户端在 open() 操作即打开一个文件时，其文件属性（a
 以上简述了IO缓存与元数据缓存两种缓存方式的原理与区别，并对Linux的IO缓存与JuiceFS的元数据缓存的实现做了简要的分析，为本项目计划实现的类似于Linux的文件缓存机制提供了优秀的范本。
 
 ## 技术依据
-### 使用QEMU搭建FreeRTOS系统的可行性
-### 使用QEMU进行文件系统开发的可行性（挂载相关）
-### FreeRTOS + QEMU 监测到已挂载设备的demo）
+### 利用QEMU对FreeRTOS进行模拟
+为了测试修改的文件系统，我们用QEMU模拟环境运行并测试FreeRTOS。
+#### Eclipse:
+Eclipse能提供交叉编译环境和多种插件,所用选用Eclipse并用其提供QEMU系列插件来模拟各种硬件环境。在使用之前需要预先安装 arm-none-eabi-gcc 编译器，QEMU系列插件。
+#### STM32
+考虑到STM32系列使用较为广泛，我们选用STM32CubeMX软件对ST系列开发环境进行创建和配置。
+#### 用FreeRTOS运行程序
+以FreeRTOS库中给出的Cortex-M3演示为例,修改或加入编写的源代码，并修改makefile文件后进行编译。
+以helloworld为例:
+定义helloworld的优先级，并编写任务函数:
+```c
+#define helloworld_priority	( tskIDLE_PRIORITY + 1 )
+
+static void HelloWorldTask( void *pvParameters );
+char str[] = "Hello World!";
+
+static void HelloWorldTask(void *pvParameters)
+{
+	( void ) pvParameters;
+	printf("%s",str);
+	while(1);
+}
+```
+改写main函数为如下内容:
+```c
+int main(void)
+{	
+	prvUARTInit();
+    xTaskCreate(HelloWorldTask,			
+		"Rx", 							
+		configMINIMAL_STACK_SIZE, 		
+		NULL, 							 
+		helloworld_priority	,
+		NULL );	
+    vTaskStartScheduler();
+    while (1)
+    {}
+}
+```
+随后用make指令构建并生成elf文件"RTOSdemo.out"，用如下指令在QEMU中运行:
+```
+qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -kernel [path]/RTOSDemo.out -monitor none -nographic -serial stdio -s -S
+```
+### 使用QEMU创建虚拟磁盘:
+用如下指令使用QEMU制作虚拟磁盘:
+```shell
+qemu-img create -f qcow2 disk.img 200M        //创建200M的磁盘镜像
+dd if=/dev/zero of=./disk.img bs=1M count=200 //清空磁盘
+```
+随后在启动内核时，命令后加```-hda [path]/disk.img```
+完整指令如下所示:
+```
+qemu-system-arm -machine mps2-an385 -cpu cortex-m3 -kernel [path]/RTOSDemo.out -hda [path]/disk.img -monitor none -nographic -serial stdio -s -S
+```
+磁盘的初始化和格式化文件系统可在内核运行后调用系统的磁盘初始化函数进行操作，或是直接用mkfs等命令行命令进行操作。
 ### 各个文件系统的库支持（Ramfs -> 直接memcpy、FAT -> 已经有FATFS库支持、jffs2 -> ?）【hty】
 ## 创新点
 ### FreeRTOS上的VFS 
