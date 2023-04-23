@@ -25,7 +25,7 @@ The course project of the Operating Systems (H), USTC, 2023.
 | 2022.4.11🌃 | 可行性报告讨论 | [feasibility_2](/reports/pre_discussion/2023_04_11/meeting.md) |              |
 | 2022.4.16🌃 | 可行性报告完善 | [feasibility_3](/reports/pre_discussion/2023_04_16/meeting.md) |              |
 | 2022.4.19🌃 | 可行性报告收尾 | [feasibility_4](/reports/pre_discussion/2023_04_19/meeting.md) |              |
-| 2022.4.24🌃 | 可行性报告完成 | [feasibility_4](/reports/pre_discussion/2023_04_23/meeting.md) |              |
+| 2022.4.23🌃 | 可行性报告完成 | [feasibility_4](/reports/pre_discussion/2023_04_23/meeting.md) |              |
 
 ## 📂 文件说明 Folder Description
 * ```reports``` 各类报告  ｜ [文档网页](osh-2023.github.io/x-Eris)
