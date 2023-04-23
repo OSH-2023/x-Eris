@@ -4,6 +4,7 @@ The course project of the Operating Systems (H), USTC, 2023.
 ## 📄 项目简介 Description
 我们希望在基于现有的FreeRTOS的虚拟文件系统模块FreeRTOS-Plus-Fat进行兼容性拓展及安全性能优化，得到一个支持全面，安全快捷的的嵌入式系统VFS。
 
+项目名称为：Eris。
 
 ## 👤 项目成员 Members
 * [罗胤玻](https://github.com/origami-b) 
@@ -23,8 +24,8 @@ The course project of the Operating Systems (H), USTC, 2023.
 | 2022.4.3🌃 | 可行性报告分工 | [feasibility_1](/reports/pre_discussion/2023_04_03/meeting.md) |              |
 | 2022.4.11🌃 | 可行性报告讨论 | [feasibility_2](/reports/pre_discussion/2023_04_11/meeting.md) |              |
 | 2022.4.16🌃 | 可行性报告完善 | [feasibility_3](/reports/pre_discussion/2023_04_16/meeting.md) |              |
-| 2022.4.19🌃 | 可行性报告完成 | [feasibility_4](/reports/pre_discussion/2023_04_19/meeting.md) |              |
-
+| 2022.4.19🌃 | 可行性报告收尾 | [feasibility_4](/reports/pre_discussion/2023_04_19/meeting.md) |              |
+| 2022.4.24🌃 | 可行性报告完成 | [feasibility_4](/reports/pre_discussion/2023_04_23/meeting.md) |              |
 
 ## 📂 文件说明 Folder Description
 * ```reports``` 各类报告  ｜ [文档网页](osh-2023.github.io/x-Eris)

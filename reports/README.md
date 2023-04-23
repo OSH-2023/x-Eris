@@ -23,8 +23,8 @@ The course project of the Operating Systems (H), USTC, 2023.
 | 2022.4.3🌃 | 可行性报告分工 | [feasibility_1](/reports/pre_discussion/2023_04_03/meeting.md) |              |
 | 2022.4.11🌃 | 可行性报告讨论 | [feasibility_2](/reports/pre_discussion/2023_04_11/meeting.md) |              |
 | 2022.4.16🌃 | 可行性报告完善 | [feasibility_3](/reports/pre_discussion/2023_04_16/meeting.md) |              |
-| 2022.4.19🌃 | 可行性报告完成 | [feasibility_4](/reports/pre_discussion/2023_04_19/meeting.md) |              |
-
+| 2022.4.19🌃 | 可行性报告收尾 | [feasibility_4](/reports/pre_discussion/2023_04_19/meeting.md) |              |
+| 2022.4.24🌃 | 可行性报告完成 | [feasibility_4](/reports/pre_discussion/2023_04_23/meeting.md) |              |
 
 ## 📂 文件说明 Folder Description
 * ```reports``` 各类报告  ｜ [文档网页](osh-2023.github.io/x-Eris)
@@ -37,8 +37,11 @@ The course project of the Operating Systems (H), USTC, 2023.
 │   ├── 2023_03_12         # 2023年3月12日的会议记录及后续文档
 │   ├── ...
 │   └── ref                # 前期讨论的参考资料
-├── pre_research.tex        # 调研报告
-├x─ feasibility            # 可行性报告
+├── feasibility            # 可行性报告专题文件夹
+│   ├── 2023_04_03         # 2023年4月3日的会议记录及后续文档
+│   └── ...
+├── pre_research.pdf       # 调研报告
+├── feasibility.md         # 可行性报告
 ├x─ mid_report             # 中期汇报
-└x─ fin_report               # 结题报告
+└x─ fin_report             # 结题报告
 ```
