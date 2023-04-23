@@ -6,7 +6,7 @@
 推荐阅读的文档：
 * https://www.freertos.org/zh-cn-cmn-s/Creating-a-new-FreeRTOS-project.html
 
-* https://www.freertos.org/zh-cn-cmn-s/Hardware-independent-RTOS-example.html（下面的源代码）
+* https://www.freertos.org/zh-cn-cmn-s/Hardware-independent-RTOS-example.html （下面的源代码）
 
 * CORTEX_M3_MPS2_QEMU_GCC/main.c, main_blinky.c
 
