@@ -29,6 +29,7 @@ The course project of the Operating Systems (H), USTC, 2023.
 | 2023.5.09🌃 | 代码分工 | [mid_2](/reports/mid_report/2023_05_09/meeting.md) |              |
 | 2023.5.17🌃 | 驱动相关讨论 | [mid_3](/reports/mid_report/2023_05_17/meeting.md) |              |
 | 2023.5.30🌃 | Lab4及大作业讨论 | [mid_4](/reports/mid_report/2023_05_30/meeting.md) |              |
+| 2023.6.02🌃 | Lab4前期讨论 | [mid_5](/reports/mid_report/2023_06_02/meeting.md) |              |
 
 
 ## 📂 文件说明 Folder Description
