@@ -16,8 +16,8 @@ class increment(object):
         # print begin calculate from start to start + elements
         print("Begin calculate from %d to %d" % (start, start + elements))
         timenow = time.time()
-        for i in range(start, start + elements):
-            self.r += (1/i^2)
+        for i in range(start + 1, start + elements):
+            self.r += (1/i ** 2)
         print(time.time() - timenow)
         print("Finish calculate from %d to %d" % (start, start + elements))
         print("Time used: %f" % (time.time() - timenow))
