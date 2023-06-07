@@ -43,14 +43,14 @@ if __name__ == '__main__':
 
 
     # create actors
-    for i in range(8):
+    for i in range(1):
         # create actor
         actor = monto.remote()
 
         # Submit calls to the actor. These calls run asynchronously but in  
         # submission order on the remote actor process.
-        incre = actor.simulate.remote(1250000)
-        n += 1250000
+        incre = actor.simulate.remote(10000000)
+        n = 10000000
         increments.append(incre)
 
     # Retrieve final actor state.
