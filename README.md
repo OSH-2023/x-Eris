@@ -31,6 +31,7 @@ The course project of the Operating Systems (H), USTC, 2023.
 | 2023.5.30🌃 | Lab4及大作业讨论 | [mid_4](/reports/mid_report/2023_05_30/meeting.md) |              |
 | 2023.6.02🌃 | Lab4前期讨论 | [mid_5](/reports/mid_report/2023_06_02/meeting.md) |              |
 | 2023.6.03🌃 | EFS合并尝试 | [mid_6](/reports/mid_report/2023_06_03/meeting.md) |              |
+| 2023.6.07🌃 | Ray部署测试 | [mid_7](/reports/mid_report/2023_06_07/meeting.md) |              |
 
 ## 📂 文件说明 Folder Description
 * ```reports``` 各类报告  ｜ [文档网页](https://osh-2023.github.io/x-Eris)
