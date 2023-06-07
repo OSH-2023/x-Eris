@@ -1,5 +1,6 @@
 import time
 import ray
+import random
 
 
 @ray.remote
@@ -8,45 +9,57 @@ def sum_remote(x):
 
 # Actor class
 @ray.remote
-class increment(object):
+class monto(object):
     def __init__(self):
-        self.r = 0.0
+        self.c = 0
+        self.n = 0
+        # e = c/n
+        self.e = 0.0
 
-    def calculate(self, start, elements):
-        # print begin calculate from start to start + elements
-        print("Begin calculate from %d to %d" % (start, start + elements))
-        timenow = time.time()
-        for i in range(start + 1, start + elements):
-            self.r += (1/i ** 2)
-        print(time.time() - timenow)
-        print("Finish calculate from %d to %d" % (start, start + elements))
-        print("Time used: %f" % (time.time() - timenow))
-        return self.r
+    def simulate(self, times):
+        print("Begin to simulate for ", times, " times")
+        self.n += times
+        for i in range(times):
+            x = random.uniform(1, 2)
+            y = random.uniform(0, 1)
+            if y < 1/x:
+                self.c += 1
+        self.e = pow(2, self.n / self.c)
+        print(self.e)
+        return self.c
 
     def get(self):
-        return self.r
+        return self.e
 
 if __name__ == '__main__':
     # init
-    ray.init()
+    context = ray.init()
+    print(context.dashboard_url)
     time1 = time.time()
     increments = []
+    n = 0
+    c = 0
+    e = 0.0
+
 
     # create actors
     for i in range(8):
         # create actor
-        actor = increment.remote()
+        actor = monto.remote()
 
         # Submit calls to the actor. These calls run asynchronously but in  
         # submission order on the remote actor process.
-        incre = actor.calculate.remote(i * 125000000, 125000000)
+        incre = actor.simulate.remote(1250000)
+        n += 125
         increments.append(incre)
 
     # Retrieve final actor state.
     results = ray.get(increments)
 
-    # Submit a task to sum the results of the actors.
-    result = sum_remote.remote(results)
+    c = sum_remote.remote(results)
+    result = ray.get(c)
+    # calculate e
+    e = pow(2, n / result)
     # Retrieve and print the result.
-    print(ray.get(result))
+    print(e)
     print("total time is: ",time.time()-time1)
