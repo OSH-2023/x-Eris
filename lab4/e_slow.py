@@ -33,7 +33,7 @@ class monto(object):
 
 if __name__ == '__main__':
     # init
-    context = ray.init(num_cpus = 2)
+    context = ray.init()
     print(context.dashboard_url)
     time1 = time.time()
     increments = []
