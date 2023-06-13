@@ -77,6 +77,13 @@ for i in range(8):
 | 优化程序  | 2.07s| 16.1%  |42.1%|16|
 
 由此可见，使用优化程序后Ray并行性提升、对空闲资源的使用更高、运行更快。
+以下是运行时截图
+![](\img\slowuse.png)
+![](\img\slowjob.png)
+![](\img\slowres.png)
+![](\img\euse.png)
+![](\img\ejob.png)
+![](\img\eres.png)
 除此之外，我们还进行了更改num_cpus数量的简要测试（以下数据均以原程序为测试对象）
 |num_cpus|周转时间|
 |:---:|:---:|
