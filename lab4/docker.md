@@ -11,7 +11,7 @@
 $y = 1/x$ 内外的点的个数。
 
 同时，使用定积分可算出这一部分的面积为 $\ln 2$，即 $e^S = 2$，也就是$2^{1/S} = 2$，由此便可近似算出$e$。
-
+![](\img\lnx.png)
 具体的代码实现中总共模拟了$10^7$次投点过程，并计算$e$的近似值。
 
 基础代码如下：  
@@ -125,9 +125,50 @@ python e.py
 ```
 
 ## 单机版优化分析
+### 优化程序：
+增加程序并行性能，将原有的10000000次撒点分为8个任务执行，核心代码如下：
+```python
+for i in range(8):
+        # create actor
+        actor = monto.remote()
+
+        # Submit calls to the actor. These calls run asynchronously but in  
+        # submission order on the remote actor process.
+        incre = actor.simulate.remote(1250000)
+        n += 1250000
+        increments.append(incre)
+
+    # Retrieve final actor state.
+    results = ray.get(increments)
+
+    c = sum(results)
+
+    # calculate e
+    e = pow(2, n / c)
+```
 
 ## 单机版优化结果
+|           | 任务用时  |CPU占用率  | 内存占用率    |吞吐量(Tasks)|
+|:---       | :---:     |:----:     |:---:          |:---:|
+| 原程序    | 7.81s|24.2%   |35.1%|2|
+| 优化程序  | 3.14s| 40.5%  |36.9%|16|
 
+由此可见，使用优化程序后Ray并行性提升、对空闲资源的使用更高、运行更快。
+以下是运行时截图
+![](\img\slowuse.png)
+![](\img\slowjob.png)
+![](\img\slowres.png)
+![](\img\euse.png)
+![](\img\ejob.png)
+![](\img\eres.png)
+除此之外，我们还进行了更改num_cpus数量的简要测试（以下数据均以原程序为测试对象）
+|num_cpus|任务用时|
+|:---:|:---:|
+|1|4.56s|
+|2|4.48s|
+|4|4.48s|
+|8|4.43s|
+可以看到，对于本测试程序，CPU核心数量并不显著影响运行时间
 ## 分布式部署流程
 ### 安装 Docker
 1. 安装 Docker Desktop: [docker.com](https://www.docker.com/)
