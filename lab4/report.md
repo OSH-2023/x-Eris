@@ -10,8 +10,10 @@
 在这个问题里则是随机于 $[1, 2] \times [0,1]$ 的方格内随机投点，统计在
 $y = 1/x$ 内外的点的个数。
 
-同时，使用定积分可算出这一部分的面积为 $\ln 2$，即 $e^S = 2$，也就是$2^{1/S} = 2$，由此便可近似算出$e$。
-![](\img\lnx.png)
+同时，使用定积分可算出这一部分的面积为 $\ln 2$，即 $e^S = 2$，也就是$2^{1/S} = e$，由此便可近似算出$e$。
+
+![a](img/lnx.png)
+
 具体的代码实现中总共模拟了$10^7$次投点过程，并计算$e$的近似值。
 
 基础代码如下：  
@@ -155,12 +157,14 @@ for i in range(8):
 
 由此可见，使用优化程序后Ray并行性提升、对空闲资源的使用更高、运行更快。
 以下是运行时截图
-![](\img\slowuse.png)
-![](\img\slowjob.png)
-![](\img\slowres.png)
-![](\img\euse.png)
-![](\img\ejob.png)
-![](\img\eres.png)
+
+![2](img/slowuse.png)
+![3](img/slowjob.png)
+![4](img/slowres.png)
+![5](img/euse.png)
+![6](img/ejob.png)
+![7](img/eres.png)
+
 除此之外，我们还进行了更改num_cpus数量的简要测试（以下数据均以原程序为测试对象）
 |num_cpus|任务用时|
 |:---:|:---:|
