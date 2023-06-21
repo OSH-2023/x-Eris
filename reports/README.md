@@ -32,6 +32,8 @@ The course project of the Operating Systems (H), USTC, 2023.
 | 2023.6.02🌃 | Lab4前期讨论 | [mid_5](/reports/mid_report/2023_06_02/meeting.md) |              |
 | 2023.6.03🌃 | EFS合并尝试 | [mid_6](/reports/mid_report/2023_06_03/meeting.md) |              |
 | 2023.6.07🌃 | Ray部署测试 | [mid_7](/reports/mid_report/2023_06_07/meeting.md) |              |
+| 2023.6.09🌃 | Lab4报告编写 | [mid_8](/reports/mid_report/2023_06_09/meeting.md) |              |
+| 2023.6.19🌃 | 最小可行性测试 | [mid_9](/reports/mid_report/2023_06_19/meeting.md) |              |
 
 
 ## 📂 文件说明 Folder Description
