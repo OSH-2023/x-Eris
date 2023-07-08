@@ -1,0 +1,3 @@
+[submodule "ErisFS"]
+	path = ErisFS
+	url = https://github.com/OSH-2023/ErisFS
