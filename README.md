@@ -10,7 +10,8 @@ The course project of the Operating Systems (H), USTC, 2023.
 ```
 
 ## 📄 项目简介 Description
-我们希望在基于现有的FreeRTOS的虚拟文件系统模块FreeRTOS-Plus-Fat进行兼容性拓展及安全性能优化，得到一个支持全面，安全快捷的的嵌入式系统VFS。
+~~我们希望在基于现有的FreeRTOS的虚拟文件系统模块FreeRTOS-Plus-Fat进行兼容性拓展及安全性能优化，得到一个支持全面，安全快捷的的嵌入式系统VFS。~~
+我们从零开始实现了FreeRTOS的虚拟文件系统模块 ErisFS，支持全面的 POSIX FILE API，并且方便拓展各种底层文件系统。
 
 项目代码地址：[ErisFS](https://github.com/OSH-2023/ErisFS)
 
