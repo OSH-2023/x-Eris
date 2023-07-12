@@ -251,7 +251,7 @@ int efs_file_ftruncate(struct efs_file *fd, off_t length)
 
 该函数用于截断文件的长度，通过调用文件描述符所关联的文件节点的文件操作函数中的 ioctl 函数来执行具体的截断操作。它根据传入的参数进行验证，并根据操作结果更新文件节点的大小。
 
-#### efs_fs.c[lyb]
+#### efs_fs.c
 efs_fs的作用是对文件系统进行管理，功能包括文件系统的挂载卸载、查找路径上的文件系统、查找设备上的文件系统、对文件系统状态进行控制，以下先介绍相关结构体的功能：
 - `struct efs_filesystem_ops`：文件系统操作表，保存文件系统名及其操作函数，包括文件系统名、文件系统对文件操作的函数表`const struct efs_file_ops *fops`以及文件系统操作函数，如mount、unmount等
 - `struct efs_filesystem`：已挂载的文件系统表 保存文件系统与设备、路径等信息
@@ -268,7 +268,7 @@ efs_fs的作用是对文件系统进行管理，功能包括文件系统的挂�
 - `efs_filesystem_get_mounted_path`：查找设备上挂载的文件系统等
 - `efs_filesystem_get_partition`：获取分区表
 
-#### efs_Posix.c[wcx]
+#### efs_Posix.c
 第一阶段efs_Posix.c主要包含open,read,write,close几个最基础的函数，通过调用文件结点和efs_file.c中的对应操作完成上层的封装和有效条件的判断。
 
 open主要操作为通过fd_new创建一个文件结点，然后使用fd_get获取创建的的文件结点，然后调用efs_file_open进行文件的创建，同时完成该文件对应文件系统的挂载；read,write,close通过fd_get获取对应文件结点，然后调用efs_file中对应的函数进行处理。
@@ -311,7 +311,7 @@ int efs_open(const char *file, int flags, ...)
 ### 第二阶段 Posix标准完善
 在这一步中，主要进行对Posix标准层以及VFS虚拟层相应函数进行拓展，计划实现全部的Posix文件标准中的函数；同时编写了负责设备管理的device.c为第三阶段实际读写物理存储介质作准备。
 
-#### Posix 补充[wcx]
+#### Posix 补充
 ![Posix](/reports/img/Posix.png)
 
 上图展现了Posix 文件相关操作的全部函数，在第一阶段仅仅实现了前四个，本阶段计划实现剩下的全部函数（以及不在此图中的文件系统相关函数unmount, mkfs...等）。
@@ -351,7 +351,7 @@ int mkdir(const char *path, mode_t mode)
     return 0;
 }
 ```
-#### device.c[lyb]
+#### device.c
 本项目设计中ErisFS不止局限于对单一设备的控制，而是能够对多个设备，如SD卡、Flash等进行统一的控制管理，但由于硬件限制，并未测试device管理对设备的实际效果，以下对device管理做简要介绍：
 `struct efs_device`：保存设备状态及相关操作函数，包括设备开关信息、设备ID、设备接口，如init、open、close等
 `efs_device_open/close`：开关设备检查设备信息，并开关设备
@@ -421,7 +421,7 @@ int efs_fatfs_unmount(struct efs_filesystem *fs)
 
 ### 第四阶段
 
-#### 经典加密[hty]
+#### 经典加密
 
 **凯撒密码**（英语：Caesar cipher），或称**凯撒加密**、**凯撒变换**、**变换加密**，是一种最简单且最广为人知的加密技术。凯撒密码是一种[替换加密](https://zh.wikipedia.org/wiki/替换式密码)技术，[明文](https://zh.wikipedia.org/wiki/明文)中的所有字母都在[字母表](https://zh.wikipedia.org/wiki/字母表)上向后（或向前）按照一个固定数目进行偏移后被替换成[密文](https://zh.wikipedia.org/wiki/密文)。例如，当偏移量是3的时候，所有的字母A将被替换成D，B变成E，以此类推。这个加密方法是以[罗马共和](https://zh.wikipedia.org/wiki/羅馬共和)时期[凯撒](https://zh.wikipedia.org/wiki/凱撒)的名字命名的，据称当年凯撒曾用此方法与其将军们进行联系。
 
@@ -436,7 +436,7 @@ $$
 D_n(x)=(x-n)\ mod\ 26
 $$
 
-#### AES加密[hty]
+#### AES加密
 
 **高级加密标准**（英语：**A**dvanced **E**ncryption **S**tandard，[缩写](https://zh.wikipedia.org/wiki/缩写)：AES），又称**Rijndael加密法**（荷兰语发音：[[ˈrɛindaːl\]](https://zh.wikipedia.org/wiki/Help:荷蘭語國際音標)，音似英文的“Rhine doll”），是[美国联邦政府](https://zh.wikipedia.org/wiki/美国联邦政府)采用的一种[区块加密](https://zh.wikipedia.org/wiki/區塊加密)标准。这个标准用来替代原先的[DES](https://zh.wikipedia.org/wiki/DES)，已经被多方分析且广为全世界所使用。经过五年的甄选流程，高级加密标准由[美国国家标准与技术研究院](https://zh.wikipedia.org/wiki/美国国家标准与技术研究院)（NIST）于2001年11月26日发布于FIPS PUB 197，并在2002年5月26日成为有效的标准。现在，高级加密标准已然成为[对称密钥加密](https://zh.wikipedia.org/wiki/对称密钥加密)中最流行的[算法](https://zh.wikipedia.org/wiki/演算法)之一。
 
