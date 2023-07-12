@@ -1,0 +1,3174 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../feasibility/">
+      
+      
+        <link rel="next" href="../feasibility/2023_04_03/Interface/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.18">
+    
+    
+      
+        <title>ErisFS 结题报告 - x-Eris</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.26e3688c.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ecc896b0.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#erisfs" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href=".." title="x-Eris" class="md-header__button md-logo" aria-label="x-Eris" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            x-Eris
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ErisFS 结题报告
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/OSH-2023/x-Eris" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OSH-2023/x-Eris
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="x-Eris" class="md-nav__button md-logo" aria-label="x-Eris" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    x-Eris
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/OSH-2023/x-Eris" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OSH-2023/x-Eris
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        x-Eris
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feasibility/" class="md-nav__link">
+        可行性报告
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          ErisFS 结题报告
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        ErisFS 结题报告
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    项目简介
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    项目背景
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    项目架构
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    开发过程
+  </a>
+  
+    <nav class="md-nav" aria-label="开发过程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    第一阶段 最小可行性系统
+  </a>
+  
+    <nav class="md-nav" aria-label="第一阶段 最小可行性系统">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#efsh" class="md-nav__link">
+    efs.h
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#efsc" class="md-nav__link">
+    efs.c
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#efs_fileh" class="md-nav__link">
+    efs_file.h
+  </a>
+  
+    <nav class="md-nav" aria-label="efs_file.h">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#container_of" class="md-nav__link">
+    container_of
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#efs_file_ops" class="md-nav__link">
+    efs_file_ops
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#struct-efs_vnode" class="md-nav__link">
+    struct efs_vnode
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#efs_mmap2_args" class="md-nav__link">
+    efs_mmap2_args
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#efs_filec" class="md-nav__link">
+    efs_file.c
+  </a>
+  
+    <nav class="md-nav" aria-label="efs_file.c">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    信号量的传递
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    始化文件节点管理器
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    计算字符串的哈希值
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    文件操作
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#efs_fsc" class="md-nav__link">
+    efs_fs.c
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#efs_posixc" class="md-nav__link">
+    efs_Posix.c
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ramfs" class="md-nav__link">
+    ramFS
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    最小可行性测试结果
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#posix" class="md-nav__link">
+    第二阶段 Posix标准完善
+  </a>
+  
+    <nav class="md-nav" aria-label="第二阶段 Posix标准完善">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#posix_1" class="md-nav__link">
+    Posix 补充
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#devicec" class="md-nav__link">
+    device.c
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    第三阶段
+  </a>
+  
+    <nav class="md-nav" aria-label="第三阶段">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fatfs" class="md-nav__link">
+    FATFS 移植
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    硬件移植
+  </a>
+  
+    <nav class="md-nav" aria-label="硬件移植">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#freertos" class="md-nav__link">
+    FreeRTOS移植
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    串口通信
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    测试结果
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    第四阶段
+  </a>
+  
+    <nav class="md-nav" aria-label="第四阶段">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    经典加密
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aes" class="md-nav__link">
+    AES加密
+  </a>
+  
+    <nav class="md-nav" aria-label="AES加密">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#addroundkey" class="md-nav__link">
+    AddRoundKey
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subbytes" class="md-nav__link">
+    SubBytes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shiftrows" class="md-nav__link">
+    ShiftRows
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mixcolumns" class="md-nav__link">
+    MixColumns
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    项目总结
+  </a>
+  
+    <nav class="md-nav" aria-label="项目总结">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    对比中期汇报
+  </a>
+  
+    <nav class="md-nav" aria-label="对比中期汇报">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    性能测试/缓存？
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mmu" class="md-nav__link">
+    MMU？
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    分工致谢
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          Feasibility
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Feasibility
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+          2023 04 03
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4_1">
+          <span class="md-nav__icon md-icon"></span>
+          2023 04 03
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feasibility/2023_04_03/Interface/" class="md-nav__link">
+        Interface
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feasibility/2023_04_03/extensibility/" class="md-nav__link">
+        理论依据【可拓展性考察】
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feasibility/2023_04_03/ff_ioman/" class="md-nav__link">
+        Ff ioman
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feasibility/2023_04_03/fscache/" class="md-nav__link">
+        Fscache
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feasibility/2023_04_03/meeting/" class="md-nav__link">
+        2023_04_03 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+          2023 04 11
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4_2">
+          <span class="md-nav__icon md-icon"></span>
+          2023 04 11
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feasibility/2023_04_11/FreeRTOS-FAT%E5%87%BD%E6%95%B0%E5%88%86%E6%9E%90/" class="md-nav__link">
+        FreeRTOS FAT函数分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feasibility/2023_04_11/Lab-Project-FreeRTOS-FAT%20%E4%B8%AD%E7%9A%84%E6%A0%87%E5%87%86%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C/" class="md-nav__link">
+        Lab-Project-FreeRTOS-FAT 中的标准文件操作
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feasibility/2023_04_11/RT-Thread%20DFS%20feasibility/" class="md-nav__link">
+        RT Thread DFS feasibility
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feasibility/2023_04_11/RT-Thread-DFS-code/" class="md-nav__link">
+        RT-Thread DFS 代码
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feasibility/2023_04_11/RT-Thread-DFS/" class="md-nav__link">
+        RT-Thread DFS 设计抽象
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feasibility/2023_04_11/meeting/" class="md-nav__link">
+        2023_04_03 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+          2023 04 16
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4_3">
+          <span class="md-nav__icon md-icon"></span>
+          2023 04 16
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feasibility/2023_04_16/meeting/" class="md-nav__link">
+        2023_04_16 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feasibility/2023_04_16/%E4%B8%8D%E5%90%8C%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%B9%8B%E9%97%B4%E7%9A%84%E5%8C%BA%E5%88%AB/" class="md-nav__link">
+        不同文件系统之间的区别
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feasibility/2023_04_16/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%BA%93%E6%94%AF%E6%8C%81/" class="md-nav__link">
+        文件系统的库支持
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+          2023 04 19
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4_4">
+          <span class="md-nav__icon md-icon"></span>
+          2023 04 19
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feasibility/2023_04_19/meeting/" class="md-nav__link">
+        2023_04_19 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+          2023 04 23
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4_5">
+          <span class="md-nav__icon md-icon"></span>
+          2023 04 23
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../feasibility/2023_04_23/meeting/" class="md-nav__link">
+        2023_04_23 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          Final
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Final
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+          2023 07 03
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5_1">
+          <span class="md-nav__icon md-icon"></span>
+          2023 07 03
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="2023_07_03/meeting/" class="md-nav__link">
+        2023_07_03 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+          2023 07 05
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5_2">
+          <span class="md-nav__icon md-icon"></span>
+          2023 07 05
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="2023_07_05/meeting/" class="md-nav__link">
+        2023_07_05 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          Mid report
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Mid report
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_1" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_1" id="__nav_6_1_label" tabindex="0">
+          2023 05 03
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_1_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_1">
+          <span class="md-nav__icon md-icon"></span>
+          2023 05 03
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mid_report/2023_05_03/meeting/" class="md-nav__link">
+        2023_05_03 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+          2023 05 09
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_2">
+          <span class="md-nav__icon md-icon"></span>
+          2023 05 09
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mid_report/2023_05_09/meeting/" class="md-nav__link">
+        2023_05_09 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_3" id="__nav_6_3_label" tabindex="0">
+          2023 05 17
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3">
+          <span class="md-nav__icon md-icon"></span>
+          2023 05 17
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mid_report/2023_05_17/meeting/" class="md-nav__link">
+        2023_05_17 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+          2023 05 30
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_4">
+          <span class="md-nav__icon md-icon"></span>
+          2023 05 30
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mid_report/2023_05_30/meeting/" class="md-nav__link">
+        2023_05_30 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_5" id="__nav_6_5_label" tabindex="0">
+          2023 06 02
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_5">
+          <span class="md-nav__icon md-icon"></span>
+          2023 06 02
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mid_report/2023_06_02/meeting/" class="md-nav__link">
+        2023_06_02 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_6" id="__nav_6_6_label" tabindex="0">
+          2023 06 03
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_6">
+          <span class="md-nav__icon md-icon"></span>
+          2023 06 03
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mid_report/2023_06_03/meeting/" class="md-nav__link">
+        2023_06_03 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_7" id="__nav_6_7_label" tabindex="0">
+          2023 06 07
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_7_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_7">
+          <span class="md-nav__icon md-icon"></span>
+          2023 06 07
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mid_report/2023_06_07/meeting/" class="md-nav__link">
+        2023_06_07 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_8" id="__nav_6_8_label" tabindex="0">
+          2023 06 09
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_8_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_8">
+          <span class="md-nav__icon md-icon"></span>
+          2023 06 09
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mid_report/2023_06_09/meeting/" class="md-nav__link">
+        2023_06_09 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_9" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_9" id="__nav_6_9_label" tabindex="0">
+          2023 06 19
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_9_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_9">
+          <span class="md-nav__icon md-icon"></span>
+          2023 06 19
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mid_report/2023_06_19/meeting/" class="md-nav__link">
+        2023_06_19 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          Pre discussion
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Pre discussion
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="0">
+          2023 03 12
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7_1">
+          <span class="md-nav__icon md-icon"></span>
+          2023 03 12
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/2023_03_12/IoTOS_research/" class="md-nav__link">
+        IoTOS 前置调研
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/2023_03_12/Linux%E5%AE%9E%E6%97%B6%E6%80%A7%E6%94%B9%E8%BF%9B/" class="md-nav__link">
+        Linux实时性改进
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/2023_03_12/Operating%20System%20for%20IoT/" class="md-nav__link">
+        Operating System for IoT
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/2023_03_12/ROS%20Application/" class="md-nav__link">
+        ROS Application
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/2023_03_12/distributed_computing/" class="md-nav__link">
+        分布式计算 简要调研
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/2023_03_12/hotfix/" class="md-nav__link">
+        Hotfix
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/2023_03_12/meeting/" class="md-nav__link">
+        2023_03_12 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/2023_03_12/safe%20container/" class="md-nav__link">
+        Safe container
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="0">
+          2023 03 17
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7_2">
+          <span class="md-nav__icon md-icon"></span>
+          2023 03 17
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/2023_03_17/distributed_computing/" class="md-nav__link">
+        分布式计算 on 嵌入式设备
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/2023_03_17/meeting/" class="md-nav__link">
+        2023_03_17 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7_3" id="__nav_7_3_label" tabindex="0">
+          2023 03 24
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7_3">
+          <span class="md-nav__icon md-icon"></span>
+          2023 03 24
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/2023_03_24/MMU/" class="md-nav__link">
+        MMU （内存管理单元）
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/2023_03_24/file%20system/" class="md-nav__link">
+        File system
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/2023_03_24/file_system_on_embeded_device/" class="md-nav__link">
+        嵌入式设备的文件系统
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/2023_03_24/file_system_optimization/" class="md-nav__link">
+        文件系统优化方向
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/2023_03_24/meeting/" class="md-nav__link">
+        2023_03_24 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/2023_03_24/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%91%E8%B0%83%E7%A0%94/" class="md-nav__link">
+        文件系统开发
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/2023_03_24/%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" class="md-nav__link">
+        调研报告
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/2023_03_24/%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF/" class="md-nav__link">
+        项目背景
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7_4" id="__nav_7_4_label" tabindex="0">
+          2023 03 30
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7_4">
+          <span class="md-nav__icon md-icon"></span>
+          2023 03 30
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/2023_03_30/meeting/" class="md-nav__link">
+        2023_03_30 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7_5" id="__nav_7_5_label" tabindex="0">
+          Ref
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7_5">
+          <span class="md-nav__icon md-icon"></span>
+          Ref
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/ref/pre_research_temp/" class="md-nav__link">
+        Pre-Research
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pre_discussion/ref/previous_projects/" class="md-nav__link">
+        预调研
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    项目简介
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    项目背景
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    项目架构
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    开发过程
+  </a>
+  
+    <nav class="md-nav" aria-label="开发过程">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    第一阶段 最小可行性系统
+  </a>
+  
+    <nav class="md-nav" aria-label="第一阶段 最小可行性系统">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#efsh" class="md-nav__link">
+    efs.h
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#efsc" class="md-nav__link">
+    efs.c
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#efs_fileh" class="md-nav__link">
+    efs_file.h
+  </a>
+  
+    <nav class="md-nav" aria-label="efs_file.h">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#container_of" class="md-nav__link">
+    container_of
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#efs_file_ops" class="md-nav__link">
+    efs_file_ops
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#struct-efs_vnode" class="md-nav__link">
+    struct efs_vnode
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#efs_mmap2_args" class="md-nav__link">
+    efs_mmap2_args
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#efs_filec" class="md-nav__link">
+    efs_file.c
+  </a>
+  
+    <nav class="md-nav" aria-label="efs_file.c">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    信号量的传递
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    始化文件节点管理器
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    计算字符串的哈希值
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    文件操作
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#efs_fsc" class="md-nav__link">
+    efs_fs.c
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#efs_posixc" class="md-nav__link">
+    efs_Posix.c
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ramfs" class="md-nav__link">
+    ramFS
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    最小可行性测试结果
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#posix" class="md-nav__link">
+    第二阶段 Posix标准完善
+  </a>
+  
+    <nav class="md-nav" aria-label="第二阶段 Posix标准完善">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#posix_1" class="md-nav__link">
+    Posix 补充
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#devicec" class="md-nav__link">
+    device.c
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    第三阶段
+  </a>
+  
+    <nav class="md-nav" aria-label="第三阶段">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fatfs" class="md-nav__link">
+    FATFS 移植
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    硬件移植
+  </a>
+  
+    <nav class="md-nav" aria-label="硬件移植">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#freertos" class="md-nav__link">
+    FreeRTOS移植
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    串口通信
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    测试结果
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    第四阶段
+  </a>
+  
+    <nav class="md-nav" aria-label="第四阶段">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    经典加密
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aes" class="md-nav__link">
+    AES加密
+  </a>
+  
+    <nav class="md-nav" aria-label="AES加密">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#addroundkey" class="md-nav__link">
+    AddRoundKey
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subbytes" class="md-nav__link">
+    SubBytes
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shiftrows" class="md-nav__link">
+    ShiftRows
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mixcolumns" class="md-nav__link">
+    MixColumns
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    项目总结
+  </a>
+  
+    <nav class="md-nav" aria-label="项目总结">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    对比中期汇报
+  </a>
+  
+    <nav class="md-nav" aria-label="对比中期汇报">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
+    性能测试/缓存？
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mmu" class="md-nav__link">
+    MMU？
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    分工致谢
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="erisfs">ErisFS 结题报告</h1>
+<h2 id="_1">项目简介</h2>
+<p>我们的项目ErisFS是FreeRTOS第一个真正意义上的虚拟文件系统。
+ErisFS兼容所有Posix 文件相关API，并且可拓展性极强，可以支持多种文件系统及存储介质移植。</p>
+<p>它将FreeRTOS与其他实时操作系统在存储管理方面的差距完全抹平；还可能与其他Posix项目联动，
+极大地方便了降低了UNIX-like程序移植到FreeRTOS上的难度，激发了嵌入式系统的无限潜能。</p>
+<p>支持的File Posix API: </p>
+<ul>
+<li>open, close, read, write, rename, unlink, stat, fstat, creat, lseek, ftruncate ...</li>
+<li>mount, unmount, mkfs, statfs ...</li>
+</ul>
+<p>支持的底层文件系统: 
+* ramFS
+* FATFS
+* 更多待移植</p>
+<h2 id="_2">项目背景</h2>
+<p>近年来，物联网设备数量逐年增长，同时嵌入式设备平均所有的存储空间也在逐年增长。最初的嵌入式设备仅需采用向指定地址写入即可简单地管理数据，但随着存储容量的增加，这种方式的劣势不断凸显，对文件系统的需求也日益急迫。FreeRTOS作为嵌入式设备的领军项目，一直缺少一个易用全面的虚拟文件系统模块，这使得FreeRTOS无法胜任许多应用场景，与同类操作系统的差距日益明显。因此，我们希望通过开发一个虚拟文件系统来解决这个问题。</p>
+<h2 id="_3">项目架构</h2>
+<p><img alt="efs_total" src="/reports/img/efs.png" />
+<img alt="efs_3" src="/reports/img/module_design.png" /></p>
+<p>上两张图分别是ErisFS的总体架构以及核心部分的详细架构图，可以从中窥探到ErisFS的设计理念。</p>
+<p>当用户使用时，会先调用<strong>Posix标准层</strong>的Posix标准函数（open, close, read, write...），然后由<strong>EFS虚拟层</strong>的对应EFS函数查找到打开的文件标识符（efs_file，存储了文件基础信息），再调用<strong>基础文件系统层</strong>的对应操作对虚拟文件节点进行读写，最终在最底下的<strong>存储介质读写层</strong>这里调用具体的驱动进行介质读写。</p>
+<p>当添加新的文件系统时，需要为其每个操作函数编写一个适配层（用于转换函数参数格式等使得其匹配ErisFS）；添加新的底层读写介质时，需要添加硬件厂商提供的硬件驱动（一般是编写好的读写函数等）；相对于完全和FATFS锁定的FreeRTOS-Plus-FAT来说，ErisFS拥有无可比拟的可拓展性以及易拓展性。</p>
+<p>在我们的开发过程中，我们实现了ramFS，FATFS的移植，以及SD的驱动移植。选取ramFS的主要原因是其原理简单，易于实现，无需涉及硬件（直接在RAM中读写），因此在项目初期采用适合快速开发最小可行性版本，调试上层函数逻辑正确性。而移植FATFS则是在项目核心开发完成后，为了展现项目的实际意义所选取的一个较为实用的文件系统，并且选择了SD卡作为存储介质，这一部分的移植涉及较多硬件，虽然调试过程艰辛复杂，但是大幅增加了项目的实际可用性。</p>
+<h2 id="_4">开发过程</h2>
+<h3 id="_5">第一阶段 最小可行性系统</h3>
+<p>此阶段计划为 FreeRTOS 实现最小可用的虚拟文件系统，仅支持磁盘的挂载与文件的读写操作、ramFS等。但是将完整地按照三层架构设计进行开发，方便后期拓展。</p>
+<h4 id="efsh">efs.h</h4>
+<p>其中的 <code>efs_fdtable</code> 表存储目前ErisFS中所有打开的文件标识符实体的信息以及与int类型的文件标识符的对应关系。</p>
+<h4 id="efsc">efs.c</h4>
+<p>实现有关efs内部的一些实用函数，例如文件路径的标准化处理，以及文件标识符的分配管理等，主要被其他文件调用。</p>
+<p>例如：
+* fd_new()：创建新的文件标识符实体
+* fd_get()：根据int类型的文件标识符找到对应的文件标识符实体（有一些基础信息，指向虚拟文件节点）
+* efs_init(): 初始化整个ErisFS的存储结构
+* efs_normalize_path(): 转换地址，主要处理 . ..</p>
+<h4 id="efs_fileh">efs_file.h</h4>
+<h5 id="container_of">container_of</h5>
+<pre><code class="language-C">#define container_of(ptr, type, member) \
+    ((type *) ((char *) (ptr) - (unsigned long) (&amp;((type *)0)-&gt;member)))
+</code></pre>
+<p>宏定义了一个容器结构体，返回输入结构体的起始地址。</p>
+<h5 id="efs_file_ops">efs_file_ops</h5>
+<pre><code class="language-C">struct efs_file_ops
+{
+    int (* open)     (struct efs_file * fd);
+    int (* close)    (struct efs_file * fd);
+    int (* ioctl)    (struct efs_file * fd, int cmd, void * args);
+    int (* read)     (struct efs_file * fd, void * buf, size_t count);
+    int (* write)    (struct efs_file * fd, const void * buf, size_t count);
+    int (* flush)    (struct efs_file * fd);
+    int (* lseek)    (struct efs_file * fd, off_t offset);
+    int (* getdents) (struct efs_file * fd, struct dirent * dirp, uint32_t count);
+};
+</code></pre>
+<p>文件操作结构体，其中包含打开文件，关闭文件，读取文件，写文件等文件操作。</p>
+<h5 id="struct-efs_vnode">struct efs_vnode</h5>
+<pre><code class="language-C">struct efs_vnode
+{
+    uint16_t type;                      /* Type (regular or socket) */
+
+    char * path;                        /* Name (below mount point) */
+    char * fullpath;                    /* Full path is hash key */
+    int ref_count;                      /* Descriptor reference count */
+    eris_list_t list;                   /* The node of vnode hash table */
+
+    struct efs_filesystem * fs;         /* File system */
+    const struct efs_file_ops * fops;   /* File operations */
+    uint32_t flags;                     /* self flags, is dir etc.. */
+
+    size_t size;                        /* Size in bytes */
+    void * data;                        /* Specific file system data */
+};
+</code></pre>
+<p>文件结点结构体，包括文件类型，路径，哈希表，文件系统，文件操作等成员。</p>
+<h5 id="efs_mmap2_args">efs_mmap2_args</h5>
+<pre><code class="language-C">struct efs_mmap2_args
+{
+    void * addr;        /* User address */
+    size_t length;      /* Length of mapping */
+    int prot;           /* Mapping protection */
+    int flags;          /* Mapping flags */
+    off_t pgoffset;     /* Offset to page boundary */
+    void * ret;         /* Return value */
+};
+</code></pre>
+<p>文件地址映射表结构体，包括了用户地址，映射长度，保护等级，映射标识符等。</p>
+<h4 id="efs_filec">efs_file.c</h4>
+<h5 id="_6">信号量的传递</h5>
+<pre><code class="language-C">void efs_fm_lock(void) 
+{
+    xSemaphoreTake( efs_fm.mutex, portMAX_DELAY);
+}
+
+void efs_fm_unlock(void) 
+{
+    xSemaphoreGive( efs_fm.mutex);
+}
+</code></pre>
+<p>这段代码定义了两个函数：<code>efs_fm_lock</code>和<code>efs_fm_unlock</code>，用于对文件管理器进行加锁和解锁操作。</p>
+<ul>
+<li><code>efs_fm_lock</code>函数用于获取文件管理器的互斥信号量（<code>efs_fm.mutex</code>）。互斥信号量是一种同步机制，它用于确保在同一时间只有一个线程可以进入被保护的代码段。通过调用<code>xSemaphoreTake</code>函数，并传入<code>efs_fm.mutex</code>和<code>portMAX_DELAY</code>参数，该函数将会一直等待，直到成功获取互斥信号量，即其他线程释放了该信号量。</li>
+<li><code>efs_fm_unlock</code>函数用于释放文件管理器的互斥信号量（<code>efs_fm.mutex</code>）。通过调用<code>xSemaphoreGive</code>函数，并传入<code>efs_fm.mutex</code>参数，该函数会释放互斥信号量，允许其他线程获取该信号量。</li>
+</ul>
+<p>这两个函数在文件管理器的代码中起到了加锁和解锁的作用，以确保在关键的文件操作期间，只有一个线程可以访问文件管理器的相关资源，避免并发访问导致的数据竞争和不一致性。</p>
+<h5 id="_7">始化文件节点管理器</h5>
+<pre><code class="language-C">void efs_vnode_mgr_init(void)
+{
+    int i = 0; 
+    efs_fm.mutex = xSemaphoreCreateMutex();
+    for (i = 0; i &lt; EFS_FNODE_HASH_NR; i++)
+    {
+        eris_list_init(&amp;efs_fm.head[i]);
+    }
+}
+</code></pre>
+<p>这段代码定义了一个名为<code>efs_vnode_mgr_init</code>的函数，用于初始化文件节点管理器。</p>
+<ul>
+<li>首先，定义了一个整型变量 <code>i</code> 并初始化为 0。</li>
+<li>接下来，通过调用 <code>xSemaphoreCreateMutex()</code> 函数创建了一个互斥信号量，并将其赋值给文件管理器的 <code>efs_fm.mutex</code> 成员。</li>
+<li>然后，通过一个 <code>for</code> 循环遍历索引 <code>i</code> 从 0 到 <code>EFS_FNODE_HASH_NR</code>（一个常量），对于每个索引值，调用 <code>eris_list_init()</code> 函数来初始化 <code>efs_fm.head</code> 数组中对应索引位置的链表。</li>
+</ul>
+<p>该函数的目的是初始化文件节点管理器，它执行以下操作：</p>
+<ul>
+<li>创建一个互斥信号量，用于对文件管理器进行加锁和解锁。</li>
+<li>初始化文件管理器的 <code>head</code> 数组，这是一个包含多个链表的数组，用于存储文件节点的哈希表。</li>
+</ul>
+<p>通过这些初始化操作，文件节点管理器被准备好，可以在后续的文件系统操作中使用。</p>
+<h5 id="_8">计算字符串的哈希值</h5>
+<pre><code class="language-C">static unsigned int bkdr_hash(const char * str)
+{
+    unsigned int seed = 131; // 31 131 1313 13131 131313 etc..
+    unsigned int hash = 0;
+
+    while (* str)
+    {
+        hash = hash * seed + (*str++);
+    }
+
+    return (hash % EFS_FNODE_HASH_NR);
+}
+</code></pre>
+<p>这段代码定义了一个静态函数 <code>bkdr_hash</code>，用于计算字符串的哈希值。</p>
+<ul>
+<li>首先，定义了一个无符号整型变量 <code>seed</code> 并初始化为 131，这是一个经验值常用于哈希函数。</li>
+<li>接下来，定义了另一个无符号整型变量 <code>hash</code> 并初始化为 0，用于保存计算得到的哈希值。</li>
+<li>在一个 <code>while</code> 循环中，通过迭代字符串 <code>str</code> 的每个字符进行计算。</li>
+<li>在每次循环中，将当前字符的 ASCII 值与哈希值相乘，并加上哈希值本身。</li>
+<li>使用后置递增运算符 <code>(*str++)</code> 来迭代到下一个字符。</li>
+<li>最后，通过取哈希值 <code>hash</code> 对 <code>EFS_FNODE_HASH_NR</code>（一个常量）取模来得到最终的哈希值。</li>
+</ul>
+<p>该哈希函数采用了BKDR（Bai, Kernighan, Driscoll, Roberts）哈希算法，它是一种简单且高效的哈希算法。它通过对字符串中的每个字符进行乘法和加法操作，以生成一个唯一的哈希值。在该函数中，使用的乘数 <code>seed</code> 可以根据实际需求进行调整。</p>
+<p>最终的哈希值被用于将字符串映射到哈希表的索引位置，以便进行快速的查找和访问操作。</p>
+<h5 id="_9">文件操作</h5>
+<pre><code class="language-C">void efs_vnode_mgr_init(void);
+int efs_file_open(struct efs_file * fd, const char * path, int flags);
+int efs_file_close(struct efs_file * fd);
+int efs_file_read(struct efs_file * fd, void * buf, size_t len);
+int efs_file_getdents(struct efs_file *fd, struct dirent *dirp, size_t nbytes);
+int efs_file_unlink(const char *path);
+int efs_file_write(struct efs_file * fd, const void * buf, size_t len);
+off_t efs_file_lseek(struct efs_file *fd, off_t offset);
+int efs_file_stat(const char *path, struct stat_efs *buf);
+int efs_file_rename(const char *old_path, const char *new_path);
+int efs_file_ftruncate(struct efs_file *fd, off_t length);
+</code></pre>
+<p>文件操作包括打开文件，关闭文件，读取文件，写文件，获取目录项 getdents，删除文件，偏移定位操作，获取文件信息，文件重命名，截断文件长度操作。</p>
+<p>以 efs_file_ftruncate 函数为例：</p>
+<pre><code class="language-C">int efs_file_ftruncate(struct efs_file *fd, off_t length)
+{
+    int result;
+
+    if (fd == NULL || fd-&gt;vnode-&gt;type != FT_REGULAR || length &lt; 0) 
+    {
+        // printf(&quot;[efs_file.c] efs_file_ftruncate: fd is NULL or not a regular file system fd\r\n&quot;);
+        return -EINVAL;
+    }
+
+    if (fd-&gt;vnode-&gt;fops-&gt;ioctl == NULL)
+        return -ENOSYS;
+
+    result = fd-&gt;vnode-&gt;fops-&gt;ioctl(fd, EFS_FIOFTRUNCATE, (void*)&amp;length); 
+    // TO BE CHECKED
+
+    if (result == 0)
+        fd-&gt;vnode-&gt;size = length;
+
+    return result;
+}
+</code></pre>
+<ul>
+<li>首先，定义了一个整型变量 <code>result</code>。</li>
+<li>接下来，进行参数检查，判断传入的文件描述符 <code>fd</code> 是否为 NULL、文件节点的类型是否为普通文件（<code>FT_REGULAR</code>）以及截断长度 <code>length</code> 是否小于 0。如果满足其中任何一个条件，返回 -EINVAL 表示参数无效。</li>
+<li>然后，检查文件节点的文件操作函数指针 <code>fd-&gt;vnode-&gt;fops-&gt;ioctl</code> 是否为 NULL。如果为 NULL，说明不支持 ioctl 操作，返回 -ENOSYS 表示不支持的系统调用。</li>
+<li>接着，调用文件操作函数指针 <code>fd-&gt;vnode-&gt;fops-&gt;ioctl</code>，传入文件描述符 <code>fd</code>、操作标识符 <code>EFS_FIOFTRUNCATE</code> 和长度指针的地址 <code>(void*)&amp;length</code> 来执行截断操作。将结果保存在 <code>result</code> 变量中。</li>
+<li>如果截断操作成功（返回值为 0），则更新文件节点的大小 <code>fd-&gt;vnode-&gt;size</code> 为给定的长度 <code>length</code>。</li>
+<li>最后，返回截断操作的结果 <code>result</code>。</li>
+</ul>
+<p>该函数用于截断文件的长度，通过调用文件描述符所关联的文件节点的文件操作函数中的 ioctl 函数来执行具体的截断操作。它根据传入的参数进行验证，并根据操作结果更新文件节点的大小。</p>
+<h4 id="efs_fsc">efs_fs.c</h4>
+<p>efs_fs的作用是对文件系统进行管理，功能包括文件系统的挂载卸载、查找路径上的文件系统、查找设备上的文件系统、对文件系统状态进行控制，以下先介绍相关结构体的功能：
+- <code>struct efs_filesystem_ops</code>：文件系统操作表，保存文件系统名及其操作函数，包括文件系统名、文件系统对文件操作的函数表<code>const struct efs_file_ops *fops</code>以及文件系统操作函数，如mount、unmount等
+- <code>struct efs_filesystem</code>：已挂载的文件系统表 保存文件系统与设备、路径等信息
+- <code>struct efs_partition</code>：文件系统分区表 文件系统分配空间信息包括文件系统类型、分区大小等
+- <code>struct efs_mount_tbl</code>：文件系统挂载表 对设备、路径、文件系统的总管理，包括设备名、路径、文件系统类型等</p>
+<p>通过上述结构体，文件系统的各项操作（一般由文件系统自身实现）、文件系统使用的硬件空间、设备、路径等信息都完备地实现了记录。实现挂载等功能时只需对相关更底层的函数调用或是对信息进行处理。efs_fs.c中的函数实质上是对各种结构体的完善或控制。
+- <code>efs_register</code>：注册文件系统，保存文件系统名及其操作函数到<code>filesystem_operation_table</code>
+- <code>efs_mount</code>：挂载文件系统，将文件系统与设备、路径相联系
+- <code>efs_unmount</code>：卸载文件系统，清空文件系统操作表、路径、关闭设备
+- <code>efs_mkfs</code>：格式化文件系统，需要调用文件系统的mkfs函数
+- <code>efs_statfs</code>：获取文件系统信息，需要调用文件系统的statfs函数
+- <code>efs_filesystem_lookup</code>：查找路径上的文件系统
+- <code>efs_filesystem_get_mounted_path</code>：查找设备上挂载的文件系统等
+- <code>efs_filesystem_get_partition</code>：获取分区表</p>
+<h4 id="efs_posixc">efs_Posix.c</h4>
+<p>第一阶段efs_Posix.c主要包含open,read,write,close几个最基础的函数，通过调用文件结点和efs_file.c中的对应操作完成上层的封装和有效条件的判断。</p>
+<p>open主要操作为通过fd_new创建一个文件结点，然后使用fd_get获取创建的的文件结点，然后调用efs_file_open进行文件的创建，同时完成该文件对应文件系统的挂载；read,write,close通过fd_get获取对应文件结点，然后调用efs_file中对应的函数进行处理。</p>
+<pre><code class="language-c">int efs_open(const char *file, int flags, ...)
+{
+    int fd, result;
+    struct efs_file *d;
+    /* allocate a fd */
+    fd = fd_new();
+    if (fd &lt; 0)
+    {
+        printf(&quot;[efs_Posix.c]failed to open a file in efs_Posix_fd_new!\n&quot;);
+        return -1;
+    }
+    d = fd_get(fd);
+    result = efs_file_open(d, file, flags);
+    if (result &lt; 0)
+    {
+        fd_release(fd);
+        printf(&quot;[efs_Posix.c]failed to open a file in efs_Posix_efs_file_open!\n&quot;);
+
+        return -1;
+    }
+
+    return fd;
+}
+</code></pre>
+<p>除此之外efs_Posix.c中还对函数返回值进行了最终的判断和报错提示，即fd_get是否找到有效结点和efs_file对应函数是否进行正确的操作。</p>
+<h4 id="ramfs">ramFS</h4>
+<p>由于ramFS本身较为简单，第一阶段已经基本上实现了ramFS的所有函数，并通过结构体将操作挂到EFS中。文件操作(如open,write)如下所示:</p>
+<pre><code class="language-c">static const struct efs_file_ops _ram_fops =
+{
+    efs_ramfs_open,
+    efs_ramfs_close,
+    efs_ramfs_ioctl,
+    efs_ramfs_read,
+    efs_ramfs_write,
+    NULL,
+    efs_ramfs_lseek,
+    efs_ramfs_getdents,
+};
+</code></pre>
+<p>文件系统操作(如mount,rename)类似，这里将不列出。
+由于是在内存中操作，而FreeRTOS本身对内存支持的操作有限，不能支持ramFS的全部功能，所以我们在其内存管理的基础上更改了部分结构，并增加如realloc等函数补全操作。以下为内存记录的结构:</p>
+<pre><code class="language-c">{
+    void                      *start_addr;
+    eris_size_t               pool_size;                    /* pool size */
+    eris_size_t               xMinimumEverFreeBytesRemaining;
+    eris_size_t               xFreeBytesRemaining;        /*available_size*/
+    eris_size_t               max_used_size;              /*maximum allocated size*/
+    eris_size_t               xNumberOfSuccessfulAllocations;
+    eris_size_t               xNumberOfSuccessfulFrees;
+    BlockLink_t               xStart;
+    BlockLink_t              *free_list;
+    BlockLink_t              *pxEnd;
+    SemaphoreHandle_t         lock;                       /* semaphore lock */
+    eris_bool_t               locked;                     /* External lock mark */
+};
+</code></pre>
+<p>在使用内存前需先对内存进行初始化efs_ramfs_create函数。该函数传入初始化的内存地址指针和分配内存大小，执行时在该段内存的头部创建一个节点记录该段内存使用情况，结构如上图所示。
+下以两个重要操作的执行过程:
+- <code>open</code>: 当第一次打开某个文件时，即会新建一个节点，并用双向循环链表的形式接入初始化时创建的节点所在链表。若文件已经创建，则通过链表找到需要打开的节点。
+- <code>write</code>：读取时若此时已分配空间不足，则会通过realloc函数获取充足空间并执行写操作。
+至此，最小可行性系统已实现。</p>
+<h4 id="_10">最小可行性测试结果</h4>
+<p><img alt="RWtest" src="/reports/img/rwtest.png" /></p>
+<p>可以看到文件开关，读写功能均测试通过，最小可行性系统基本开发完成。这个最小可行性测试完成后，我们的项目实际上已经完成了一半，得到了一个规范的三层架构虚拟文件系统
+虽然目前只支持读写，但是接下来只要添加和移植而不是从零创造，难度小了很多。</p>
+<h3 id="posix">第二阶段 Posix标准完善</h3>
+<p>在这一步中，主要进行对Posix标准层以及VFS虚拟层相应函数进行拓展，计划实现全部的Posix文件标准中的函数；同时编写了负责设备管理的device.c为第三阶段实际读写物理存储介质作准备。</p>
+<h4 id="posix_1">Posix 补充</h4>
+<p><img alt="Posix" src="/reports/img/Posix.png" /></p>
+<p>上图展现了Posix 文件相关操作的全部函数，在第一阶段仅仅实现了前四个，本阶段计划实现剩下的全部函数（以及不在此图中的文件系统相关函数unmount, mkfs...等）。</p>
+<p>Posix扩展主要是根据Posix标准，补全了一些关于文件和文件夹的函数，如lseek, rename, unlink, stat, fstat, statfs等文件操作和mkdir, rmdir, opendir, readdir, telldir, seekdir, rewinddir, closedir等文件夹操作。</p>
+<p>其中，文件操作的实现和read,write这些基本操作类似；而文件夹操作其实也是一种特殊的文件操作，但是在细节处理时有所区别，通过数据结构和向efs_file对应函数传入不同参数实现，以mkdir为例，以下为其代码。</p>
+<pre><code class="language-c">int mkdir(const char *path, mode_t mode)
+{
+    int fd;
+    struct efs_file *d;
+    int result;
+
+    fd = fd_new();
+    if (fd == -1)
+    {
+        printf(&quot;[efs_Posix.c]failed to get the file in efs_Posix_mkdir!\n&quot;);
+
+        return -1;
+    }
+
+    d = fd_get(fd);
+    result = efs_file_open(d, path, O_DIRECTORY | O_CREAT);
+
+    if (result &lt; 0)
+    {
+        fd_release(fd);
+        printf(&quot;[efs_Posix.c]failed to create directory in mkdir!\n&quot;);
+        return -1;
+    }
+
+    efs_file_close(d);
+    fd_release(fd);
+
+    return 0;
+}
+</code></pre>
+<h4 id="devicec">device.c</h4>
+<p>本项目设计中ErisFS不止局限于对单一设备的控制，而是能够对多个设备，如SD卡、Flash等进行统一的控制管理，但由于硬件限制，并未测试device管理对设备的实际效果，以下对device管理做简要介绍：
+<code>struct efs_device</code>：保存设备状态及相关操作函数，包括设备开关信息、设备ID、设备接口，如init、open、close等
+<code>efs_device_open/close</code>：开关设备检查设备信息，并开关设备
+<code>efs_device_read/write</code>：读写设备 检查设备信息，并读写设备
+<code>efs_device_find</code>：查找设备 查找已实现的设备，并返回其结构体</p>
+<p>值得提出的是，device管理的核心是将底层的设备操作函数与上层抽象层链接以方便管理，理想状态下能够同时实现对板子上SD卡、Flash等存储设备的统一管理。</p>
+<h3 id="_11">第三阶段</h3>
+<p>此阶段计划为为ErisFS添加底层文件系统。得益于规范的多层架构设计，不需要改动上两层代码即可为更多的底层文件系统添加支持。</p>
+<p>同时这一阶段为了能读写实体SD卡，选择了向STM32F429开发板进行移植，完成了许多硬件调试工作。</p>
+<h4 id="fatfs">FATFS 移植</h4>
+<p>FATFS适配层主要实现了vfs虚拟层调用函数和FATFS的基本函数之间传入参数的适配，并且通过FreeRTOS中特有的空间分配释放等函数，为FATFS进行空间的分配。</p>
+<p>其中，又分为文件系统操作函数和文件操作函数，文件系统操作函数包括efs_fatfs_mount, efs_fatfs_unmount，efs_fatfs_mkfs,efs_fatfs_statfs,efs_fatfs_unlink,efs_fatfs_stat, efs_fatfs_rename；文件操作函数包括efs_fatfs_open, efs_fatfs_close, efs_fatfs_ioctl, efs_fatfs_read, efs_fatfs_write, efs_fatfs_lseek, efs_fatfs_getdents。</p>
+<p>大致函数内容如下所示，通过get_disk获取设备编号，然后通过调用FATFS内置的函数进行取消挂载的操作，其他函数还涉及部分文件系统挂载、文件夹创建等涉及到的空间分配的函数。</p>
+<pre><code class="language-c">int efs_fatfs_unmount(struct efs_filesystem *fs)
+{
+    FATFS *fat;
+    FRESULT result;
+    int  index;
+    char logic_nbr[3] = {'0',':', 0};
+
+    fat = (FATFS *)fs-&gt;data;
+
+    if (fat == NULL)
+    {
+        // printf(&quot;[efs_fatfs.c] failed to fetch fat in efs_fatfs_unmount!\r\n&quot;);
+        return -1;
+    }
+
+    /* find the device index and then umount it */
+    index = get_disk(fs-&gt;dev_id);
+    if (index == -1) /* not found */
+    {
+        // printf(&quot;[efs_fatfs.c] failed to get disk in efs_fatfs_unmount!\r\n&quot;);
+        return -1;
+    }
+
+    logic_nbr[0] = '0' + index;
+    result = f_mount(NULL, logic_nbr, (unsigned char)0);
+    if (result != FR_OK)
+        return fatfs_result_to_errno(result);
+
+    fs-&gt;data = NULL;
+    disk[index] = NULL;
+    vPortFree(fat);
+
+    return 0;
+}
+</code></pre>
+<h4 id="_12">硬件移植</h4>
+<p>FreeRTOS官方提供的Demo中仅有mps2-an385所对应的开发板，其较为冷门，未能找到相关硬件驱动。因此需要实体开发板进一步测试硬件读写。</p>
+<h5 id="freertos">FreeRTOS移植</h5>
+<p>移植分为两步，首先需配置<code>FreeRTOSConfig.h</code>文件，以实现对FreeRTOS系统的裁剪并实现对该开发板的支持。
+随后修改开发板官方提供的<code>SYSTEM</code>文件，将对操作系统的选用换为FreeRTOS，并更改系统时钟，中断等操作以使得FreeRTOS可以正常运行。</p>
+<h5 id="_13">串口通信</h5>
+<p>为烧录程序并得到运行结果，采用串口方式进行通信。
+程序在编译成hex文件后借助FlyMcu烧入开发板。
+对于硬件，加入<code>_sys_exit_(int x){x=x;}</code>限制其以避免进入半主机模式，并将<code>printf</code>输出到usart1串口。
+接收数据则通过XCOM串口调试助手实现。</p>
+<h4 id="_14">测试结果</h4>
+<p><img alt="t1" src="/reports/img/t1.png" /></p>
+<p><img alt="t2" src="/reports/img/t2.jpg" /></p>
+<p>第二阶段新增的各种Posix函数也已在硬件上测试通过，这里除了原来的测试之外，还加入了文件夹创建关闭删除等测试。</p>
+<p>至此，我们的ErisFS已经算是开发完成了，它已经实现了我们在项目简介里提出的所有目标，支持全部FILE POSIX API，有便于修改拓展移植的三层架构，适配好了ramfs（测试意义）和FATFS（实际意义）这两个开箱即用的文件系统。</p>
+<h3 id="_15">第四阶段</h3>
+<h4 id="_16">经典加密</h4>
+<p><strong>凯撒密码</strong>（英语：Caesar cipher），或称<strong>凯撒加密</strong>、<strong>凯撒变换</strong>、<strong>变换加密</strong>，是一种最简单且最广为人知的加密技术。凯撒密码是一种<a href="https://zh.wikipedia.org/wiki/替换式密码">替换加密</a>技术，<a href="https://zh.wikipedia.org/wiki/明文">明文</a>中的所有字母都在<a href="https://zh.wikipedia.org/wiki/字母表">字母表</a>上向后（或向前）按照一个固定数目进行偏移后被替换成<a href="https://zh.wikipedia.org/wiki/密文">密文</a>。例如，当偏移量是3的时候，所有的字母A将被替换成D，B变成E，以此类推。这个加密方法是以<a href="https://zh.wikipedia.org/wiki/羅馬共和">罗马共和</a>时期<a href="https://zh.wikipedia.org/wiki/凱撒">凯撒</a>的名字命名的，据称当年凯撒曾用此方法与其将军们进行联系。</p>
+<p>凯撒密码通常被作为其他更复杂的加密方法中的一个步骤，例如<a href="https://zh.wikipedia.org/wiki/维吉尼亚密码">维吉尼亚密码</a>。凯撒密码还在现代的<a href="https://zh.wikipedia.org/wiki/ROT13">ROT13</a>系统中被应用。但是和所有的利用字母表进行替换的加密技术一样，凯撒密码非常容易被破解，而且在实际应用中也无法保证通信安全。</p>
+<p>凯撒密码的加密、解密方法还能够通过<a href="https://zh.wikipedia.org/wiki/同余">同余</a>的数学方法进行计算。首先将字母用数字代替，A=0，B=1，...，Z=25。此时偏移量为n的加密方法即为：
+$$
+E_n(x)=(x+n)\ mod\ 26
+$$
+解密就是：
+$$
+D_n(x)=(x-n)\ mod\ 26
+$$</p>
+<h4 id="aes">AES加密</h4>
+<p><strong>高级加密标准</strong>（英语：<strong>A</strong>dvanced <strong>E</strong>ncryption <strong>S</strong>tandard，<a href="https://zh.wikipedia.org/wiki/缩写">缩写</a>：AES），又称<strong>Rijndael加密法</strong>（荷兰语发音：[<a href="https://zh.wikipedia.org/wiki/Help:荷蘭語國際音標">ˈrɛindaːl]</a>，音似英文的“Rhine doll”），是<a href="https://zh.wikipedia.org/wiki/美国联邦政府">美国联邦政府</a>采用的一种<a href="https://zh.wikipedia.org/wiki/區塊加密">区块加密</a>标准。这个标准用来替代原先的<a href="https://zh.wikipedia.org/wiki/DES">DES</a>，已经被多方分析且广为全世界所使用。经过五年的甄选流程，高级加密标准由<a href="https://zh.wikipedia.org/wiki/美国国家标准与技术研究院">美国国家标准与技术研究院</a>（NIST）于2001年11月26日发布于FIPS PUB 197，并在2002年5月26日成为有效的标准。现在，高级加密标准已然成为<a href="https://zh.wikipedia.org/wiki/对称密钥加密">对称密钥加密</a>中最流行的<a href="https://zh.wikipedia.org/wiki/演算法">算法</a>之一。</p>
+<p>该算法为<a href="https://zh.wikipedia.org/wiki/比利时">比利时</a>密码学家Joan Daemen和Vincent Rijmen所设计，结合两位作者的名字，以Rijndael为名投稿高级加密标准的甄选流程。</p>
+<p>严格地说，AES和<a href="https://zh.wikipedia.org/wiki/Rijndael">Rijndael</a>加密法并不完全一样（虽然在实际应用中两者可以互换），因为Rijndael加密法可以支持更大范围的<a href="https://zh.wikipedia.org/wiki/块大小">区块</a>和<a href="https://zh.wikipedia.org/wiki/密钥长度">密钥长度</a>：AES的区块长度固定为128<a href="https://zh.wikipedia.org/wiki/位元">比特</a>，密钥长度则可以是128，192或256比特；而Rijndael使用的密钥和区块长度均可以是128，192或256比特。加密过程中使用的密钥是由<a href="https://zh.wikipedia.org/wiki/Rijndael密钥生成方案">Rijndael密钥生成方案</a>产生。</p>
+<p>大多数AES计算是在一个特别的<a href="https://zh.wikipedia.org/wiki/有限域">有限域</a>完成的。</p>
+<p>AES加密过程是在一个4×4的<a href="https://zh.wikipedia.org/wiki/位元组">字节</a>矩阵上运作，这个矩阵又称为“体（state）”，其初值就是一个明文区块（矩阵中一个元素大小就是明文区块中的一个Byte）。（Rijndael加密法因支持更大的区块，其矩阵的“列数（Row number）”可视情况增加）加密时，各轮AES加密循环（除最后一轮外）均包含4个步骤：</p>
+<ol>
+<li><code>AddRoundKey</code>—<a href="https://zh.wikipedia.org/wiki/矩阵">矩阵</a>中的每一个字节都与该次<a href="https://zh.wikipedia.org/w/index.php?title=密鑰次序表&amp;action=edit&amp;redlink=1">回合密钥</a>（round key）做<a href="https://zh.wikipedia.org/zh-cn/XOR">XOR运算</a>；每个子密钥由密钥生成方案产生。</li>
+<li><code>SubBytes</code>—透过一个非线性的替换函数，用<a href="https://zh.wikipedia.org/wiki/查找表">查找表</a>的方式把每个字节替换成对应的字节。</li>
+<li><code>ShiftRows</code>—将矩阵中的每个横列进行循环式移位。</li>
+<li><code>MixColumns</code>—为了充分混合矩阵中各个直行的操作。这个步骤使用线性转换来混合每内联的四个字节。最后一个加密循环中省略<code>MixColumns</code>步骤，而以另一个<code>AddRoundKey</code>取代。</li>
+</ol>
+<h5 id="addroundkey">AddRoundKey</h5>
+<p><code>AddRoundKey</code>步骤，回合密钥将会与原矩阵合并。在每次的加密循环中，都会由主密钥产生一把回合密钥（透过<a href="https://zh.wikipedia.org/wiki/Rijndael密钥生成方案">Rijndael密钥生成方案</a>产生），这把密钥大小会跟原矩阵一样，以与原矩阵中每个对应的字节作<a href="https://zh.wikipedia.org/wiki/异或">异或</a>（⊕）加法。</p>
+<p><img alt="img" src="../img/320px-AES-AddRoundKey.svg.png" /></p>
+<pre><code class="language-C">/**
+ *  Cipher() AES encrypt function
+ *  Input: in[16] plaintext block(128 bits), NR (Number of round), key[]
+ *  output: out[16] cipher block(128 bits), 
+ */
+void AddRoundKey(int round)
+{
+    /**
+     * first key index = round * 16 bytes = round * NB * 4;
+     * NB = 4
+     */
+    for (int i = 0; i &lt; 4; i++)
+    {
+        for (int j = 0; j &lt; 4; j++)
+        {
+            state[j][i] ^= round_key[(i * NB + j) + (round * NB * 4)]; 
+        }
+    }
+    return;
+}
+</code></pre>
+<h5 id="subbytes">SubBytes</h5>
+<p>在<code>SubBytes</code>步骤中，矩阵中的各字节透过一个8位的<a href="https://zh.wikipedia.org/wiki/S-box">S-box</a>进行转换。这个步骤提供了<a href="https://zh.wikipedia.org/wiki/加密法">加密法</a>非线性的变换能力。<a href="https://zh.wikipedia.org/wiki/S-box">S-box</a>与$GF(2^8)$上的乘法<a href="https://zh.wikipedia.org/wiki/反元素">反元素</a>有关，已知具有良好的<a href="https://zh.wikipedia.org/wiki/非線性">非线性</a>特性。为了避免简单代数性质的攻击，S-box结合了乘法反元素及一个可逆的<a href="https://zh.wikipedia.org/wiki/仿射变换">仿射变换</a>矩阵建构而成。此外在建构S-box时，刻意避开了<a href="https://zh.wikipedia.org/wiki/不動點">不动点</a>与<a href="https://zh.wikipedia.org/w/index.php?title=反不動點&amp;action=edit&amp;redlink=1">反不动点</a>，即以S-box替换字节的结果会相当于错排的结果。</p>
+<p><img alt="img" src="../img/320px-AES-SubBytes.svg.png" /></p>
+<pre><code class="language-C">// S-Box Substitution
+void SubBytes(void)
+{
+    for (int i = 0; i &lt; 4; i++)
+    {
+        for (int j = 0;j &lt; 4;j++)
+        {
+            state[i][j] = substitution_box[state[i][j]];
+        }
+    }
+    return;
+}
+</code></pre>
+<h5 id="shiftrows">ShiftRows</h5>
+<p><code>ShiftRows</code>描述矩阵的行操作。在此步骤中，每一行都向左循环位移某个<a href="https://zh.wikipedia.org/wiki/偏移量">偏移量</a>。在AES中（区块大小128位），第一行维持不变，第二行里的每个字节都向左循环移动一格。同理，第三行及第四行向左循环位移的偏移量就分别是2和3。128位和192比特的区块在此步骤的循环位移的模式相同。经过<code>ShiftRows</code>之后，矩阵中每一竖列，都是由输入矩阵中的每个不同列中的元素组成。Rijndael算法的版本中，偏移量和AES有少许不同；对于长度256比特的区块，第一行仍然维持不变，第二行、第三行、第四行的偏移量分别是1字节、2字节、3字节。除此之外，<code>ShiftRows</code>操作步骤在Rijndael和AES中完全相同。</p>
+<p><img alt="img" src="../img/320px-AES-ShiftRows.svg.png" /></p>
+<pre><code class="language-C">// left Circular Shift (row), 
+void ShiftRows(void)
+{
+    unsigned char temp_byte;
+
+    // 2nd row left Circular Shift 1 byte
+    temp_byte   = state[1][0];
+    state[1][0] = state[1][1];
+    state[1][1] = state[1][2];
+    state[1][2] = state[1][3];
+    state[1][3] = temp_byte;
+
+    // 3th row left Circular Shift 2 byte
+    temp_byte   = state[2][0];
+    state[2][0] = state[2][2];
+    state[2][2] = temp_byte;
+
+    temp_byte    = state[2][1];
+    state[2][1] = state[2][3];
+    state[2][3] = temp_byte;
+
+    // 4th row left Circular Shift 3 byte
+    temp_byte   = state[3][0];
+    state[3][0] = state[3][3];
+    state[3][3] = state[3][2];
+    state[3][2] = state[3][1];
+    state[3][1] = temp_byte;
+    return;
+}
+</code></pre>
+<h5 id="mixcolumns">MixColumns</h5>
+<p>在<code>MixColumns</code>步骤，每一列的四个字节透过<a href="https://zh.wikipedia.org/wiki/线性变换">线性变换</a>互相结合。每一列的四个元素分别当作$1,x,x^2,x^3$的系数，合并即为$GF(2^8)$中的一个多项式，接着将此多项式和一个固定的多项式在$c(x)=3x^3+x^2+x+2$模$x^4+1$下相乘。此步骤亦可视为<a href="https://zh.wikipedia.org/w/index.php?title=Rijndael有限域&amp;action=edit&amp;redlink=1">Rijndael有限域</a>之下的矩阵乘法。<code>MixColumns</code>函数接受4个字节的输入，输出4个字节，每一个输入的字节都会对输出的四个字节造成影响。因此<code>ShiftRows</code>和<code>MixColumns</code>两步骤为这个密码系统提供了<a href="https://zh.wikipedia.org/w/index.php?title=擴散性&amp;action=edit&amp;redlink=1">扩散性</a>。</p>
+<p><img alt="img" src="../img/320px-AES-MixColumns.svg.png" /></p>
+<pre><code class="language-C">/** 
+ *  MixColumns()
+ *  4 sub_block) 
+ *  c0     [2 3 1 1   [b0  
+ *  c1      1 2 3 1    b1
+ *  c2  =   1 1 2 3    b2
+ *  c3      3 1 1 2]   b3]
+ *  linear transform
+ */
+void MixColumns(void)
+{
+    unsigned char Tmp, Tm, t;
+    for(int i = 0; i &lt; 4; i++)
+    {    
+        t   = state[0][i];
+        Tmp = state[0][i] ^ state[1][i] ^ state[2][i] ^ state[3][i];
+        Tm  = state[0][i] ^ state[1][i]; 
+        Tm = xtime(Tm); 
+        state[0][i] ^= Tm ^ Tmp ;
+        Tm  = state[1][i] ^ state[2][i]; 
+        Tm = xtime(Tm); state[1][i] ^= Tm ^ Tmp ;
+        Tm  = state[2][i] ^ state[3][i]; 
+        Tm = xtime(Tm); state[2][i] ^= Tm ^ Tmp ;
+        Tm  = state[3][i] ^ t;           
+        Tm = xtime(Tm); state[3][i] ^= Tm ^ Tmp ;
+    }
+    return;
+}
+</code></pre>
+<h2 id="_17">项目总结</h2>
+<p>我们的项目顺利按照开发路线完成了开发，其实现了中期报告中的所有目标。</p>
+<p>最后实现了架构科学，接口全面，方便拓展的虚拟文件系统ErisFS，弥补了FreeRTOS在虚拟文件系统方面的短板。</p>
+<p>它还可与其他项目联动发挥更大的作用，例如与FreeRTOS-Plus-POSIX联动便捷unix-like程序到FreeRTOS上的移植；或是与FreeRTOS-Plus-TCP联动实现嵌入式芯片即可管理的NAS服务器。总之，它大大地拓宽了FreeRTOS的应用广度与可能性，希望它能为FreeRTOS生态圈的发展做出一点贡献。</p>
+<h3 id="_18">对比中期汇报</h3>
+<h4 id="_19">性能测试/缓存？</h4>
+<p>关于这两点有关性能的问题，我们对此项目（虚拟文件系统）的定位进行了思考，它实际上更像是一个管理系统而非具体的文件系统。文件读写的效率不取决于我们，而取决于底层所用的文件系统格式以及下方的存储介质技术。同理，缓存技术的采用应该由底层文件系统实现，而不是我们的项目。</p>
+<p>因此性能测试对我们的项目没有意义，确保全部功能的正确性即可，而这已在前面的三个阶段测试已经展现过了。</p>
+<h4 id="mmu">MMU？</h4>
+<p>在开题报告时邢凯老师曾提过MMU，在最后的拓展阶段我们也想到了这个方向，但是没有选择它的具体原因有三点：</p>
+<ul>
+<li>第一点是最后选择的硬件板子本身芯片STM32F429就不支持MMU，因此软件层面即使实现了也没有意义</li>
+<li>
+<p>第二点是，在存储容量增长的现在，大部分嵌入式设备的运行内存依然很少，这是他们和PC的CPU之间的重大区别。MMU不被认为是实时操作系统的必需功能。实际上，作为专注精简的文件系统，FreeRTOS官方也认为不需要实现MMU繁杂的功能；同类型的RT-Thread其基础版本中也没有MMU的身影。</p>
+</li>
+<li>
+<p>第三点，也是最基础的，我们的项目是涉及存储，而非内存管理，因此MMU和我们的方向差距过远，不予考虑</p>
+</li>
+</ul>
+<h3 id="_20">分工致谢</h3>
+<ul>
+<li>
+<p>吴书让：ErisFS 主文件相关、测试程序编写、整体调试工作</p>
+</li>
+<li>
+<p>李润时：RamFS、FATFS相关、硬件调试工作</p>
+</li>
+<li>
+<p>罗胤玻：ErisFS 文件系统相关、device设备管理</p>
+</li>
+<li>
+<p>万宸希：ErisFS POSIX 相关</p>
+</li>
+<li>
+<p>胡天羽：加密、辅助函数相关</p>
+</li>
+</ul>
+<p>非常感谢各位同学在项目开发过程的全力支持，特别是考完后最近几天在开发调试上投入的大量时间、也很感谢项目过程中助教给出的许多实用建议.</p>
+<p>最后，非常感谢邢凯老师从开题报告开始到最后硬件调试这几个月来的对我们的各种建议和设备经费支持，帮助我们更好的完成了这个项目</p>
+<p>以上就是我们组x-Eris大作业结题报告。</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.220ee61c.min.js"></script>
+      
+    
+  </body>
+</html>
