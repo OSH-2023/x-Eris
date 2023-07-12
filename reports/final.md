@@ -38,6 +38,48 @@ efs_fs的作用是对文件系统进行管理，功能包括文件系统的挂�
 
 ### 第三阶段
 #### FATFS 移植[wcx]
+FATFS适配层主要实现了vfs虚拟层调用函数和FATFS的基本函数之间传入参数的适配，并且通过FreeRTOS中特有的空间分配释放等函数，为FATFS进行空间的分配。
+
+其中，又分为文件系统操作函数和文件操作函数，文件系统操作函数包括efs_fatfs_mount, efs_fatfs_unmount，efs_fatfs_mkfs,efs_fatfs_statfs,efs_fatfs_unlink,efs_fatfs_stat, efs_fatfs_rename；文件操作函数包括efs_fatfs_open, efs_fatfs_close, efs_fatfs_ioctl, efs_fatfs_read, efs_fatfs_write, efs_fatfs_lseek, efs_fatfs_getdents。
+
+大致函数内容如下所示，通过get_disk获取设备编号，然后通过调用FATFS内置的函数进行取消挂载的操作，其他函数还涉及部分文件系统挂载、文件夹创建等涉及到的空间分配的函数。
+
+```c
+int efs_fatfs_unmount(struct efs_filesystem *fs)
+{
+    FATFS *fat;
+    FRESULT result;
+    int  index;
+    char logic_nbr[3] = {'0',':', 0};
+
+    fat = (FATFS *)fs->data;
+
+    if (fat == NULL)
+    {
+        // printf("[efs_fatfs.c] failed to fetch fat in efs_fatfs_unmount!\r\n");
+        return -1;
+    }
+
+    /* find the device index and then umount it */
+    index = get_disk(fs->dev_id);
+    if (index == -1) /* not found */
+    {
+        // printf("[efs_fatfs.c] failed to get disk in efs_fatfs_unmount!\r\n");
+        return -1;
+    }
+
+    logic_nbr[0] = '0' + index;
+    result = f_mount(NULL, logic_nbr, (unsigned char)0);
+    if (result != FR_OK)
+        return fatfs_result_to_errno(result);
+
+    fs->data = NULL;
+    disk[index] = NULL;
+    vPortFree(fat);
+
+    return 0;
+}
+```
 #### 硬件移植[lrs]
 ### 第四阶段
 #### 经典加密[hty]
