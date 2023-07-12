@@ -24,9 +24,75 @@ efs_fs的作用是对文件系统进行管理，功能包括文件系统的挂�
 - `efs_filesystem_get_partition`：获取分区表
 
 #### efs_posix.c[wcx]
+第一阶段efs_posix.c主要包含open,read,write,close几个最基础的函数，通过调用文件结点和efs_file.c中的对应操作完成上层的封装和有效条件的判断。
+
+open主要操作为通过fd_new创建一个文件结点，然后使用fd_get获取创建的的文件结点，然后调用efs_file_open进行文件的创建，同时完成该文件对应文件系统的挂载；read,write,close通过fd_get获取对应文件结点，然后调用efs_file中对应的函数进行处理。
+
+```c
+int efs_open(const char *file, int flags, ...)
+{
+    int fd, result;
+    struct efs_file *d;
+    /* allocate a fd */
+    fd = fd_new();
+    if (fd < 0)
+    {
+        printf("[efs_posix.c]failed to open a file in efs_posix_fd_new!\n");
+        return -1;
+    }
+    d = fd_get(fd);
+    result = efs_file_open(d, file, flags);
+    if (result < 0)
+    {
+        fd_release(fd);
+        printf("[efs_posix.c]failed to open a file in efs_posix_efs_file_open!\n");
+
+        return -1;
+    }
+
+    return fd;
+}
+```
+
+除此之外efs_posix.c中还对函数返回值进行了最终的判断和报错提示，即fd_get是否找到有效结点和efs_file对应函数是否进行正确的操作。
 #### ramfs[lrs]
 ### 第二阶段
 #### Posix 补充[wcx]
+posix扩展主要是根据posix标准，补全了一些关于文件和文件夹的函数，如lseek, rename, unlink, stat, fstat, statfs等文件操作和mkdir, rmdir, opendir, readdir, telldir, seekdir, rewinddir, closedir等文件夹操作。
+
+其中，文件操作的实现和read,write这些基本操作类似；而文件夹操作其实也是一种特殊的文件操作，但是在细节处理时有所区别，通过数据结构和向efs_file对应函数传入不同参数实现，以mkdir为例，以下为其代码。
+
+```c
+int mkdir(const char *path, mode_t mode)
+{
+    int fd;
+    struct efs_file *d;
+    int result;
+
+    fd = fd_new();
+    if (fd == -1)
+    {
+        printf("[efs_posix.c]failed to get the file in efs_posix_mkdir!\n");
+
+        return -1;
+    }
+
+    d = fd_get(fd);
+    result = efs_file_open(d, path, O_DIRECTORY | O_CREAT);
+
+    if (result < 0)
+    {
+        fd_release(fd);
+        printf("[efs_posix.c]failed to create directory in mkdir!\n");
+        return -1;
+    }
+
+    efs_file_close(d);
+    fd_release(fd);
+
+    return 0;
+}
+```
 #### device.c[lyb]
 本项目设计中ErisFS不止局限于对单一设备的控制，而是能够对多个设备，如SD卡、Flash等进行统一的控制管理，但由于硬件限制，并未测试device管理对设备的实际效果，以下对device管理做简要介绍：
 `struct efs_device`：保存设备状态及相关操作函数，包括设备开关信息、设备ID、设备接口，如init、open、close等
