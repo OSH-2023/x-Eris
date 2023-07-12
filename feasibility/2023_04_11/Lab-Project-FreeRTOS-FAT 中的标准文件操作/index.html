@@ -1,0 +1,2963 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../FreeRTOS-FAT%E5%87%BD%E6%95%B0%E5%88%86%E6%9E%90/">
+      
+      
+        <link rel="next" href="../RT-Thread%20DFS%20feasibility/">
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.18">
+    
+    
+      
+        <title>Lab-Project-FreeRTOS-FAT 中的标准文件操作 - x-Eris</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.26e3688c.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ecc896b0.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="deep-orange">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lab-project-freertos-fat" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../.." title="x-Eris" class="md-header__button md-logo" aria-label="x-Eris" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            x-Eris
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Lab-Project-FreeRTOS-FAT 中的标准文件操作
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/OSH-2023/x-Eris" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OSH-2023/x-Eris
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="x-Eris" class="md-nav__button md-logo" aria-label="x-Eris" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    x-Eris
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/OSH-2023/x-Eris" title="前往仓库" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    OSH-2023/x-Eris
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        x-Eris
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        可行性报告
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final/" class="md-nav__link">
+        ErisFS 结题报告
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+          Feasibility
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Feasibility
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+          2023 04 03
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4_1">
+          <span class="md-nav__icon md-icon"></span>
+          2023 04 03
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2023_04_03/Interface/" class="md-nav__link">
+        Interface
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2023_04_03/extensibility/" class="md-nav__link">
+        理论依据【可拓展性考察】
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2023_04_03/ff_ioman/" class="md-nav__link">
+        Ff ioman
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2023_04_03/fscache/" class="md-nav__link">
+        Fscache
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2023_04_03/meeting/" class="md-nav__link">
+        2023_04_03 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+          2023 04 11
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="true">
+        <label class="md-nav__title" for="__nav_4_2">
+          <span class="md-nav__icon md-icon"></span>
+          2023 04 11
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../FreeRTOS-FAT%E5%87%BD%E6%95%B0%E5%88%86%E6%9E%90/" class="md-nav__link">
+        FreeRTOS FAT函数分析
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Lab-Project-FreeRTOS-FAT 中的标准文件操作
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Lab-Project-FreeRTOS-FAT 中的标准文件操作
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#freertos-stdlibh" class="md-nav__link">
+    FreeRtos 中 stdlib.h
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ff_write" class="md-nav__link">
+    FF_Write()
+  </a>
+  
+    <nav class="md-nav" aria-label="FF_Write()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ff_write_1" class="md-nav__link">
+    FF_Write() 调用的函数
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ff_device_write" class="md-nav__link">
+    FF_Device_Write
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ff_open" class="md-nav__link">
+    FF_Open
+  </a>
+  
+    <nav class="md-nav" aria-label="FF_Open">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ff_file" class="md-nav__link">
+    FF_FILE
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RT-Thread%20DFS%20feasibility/" class="md-nav__link">
+        RT Thread DFS feasibility
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RT-Thread-DFS-code/" class="md-nav__link">
+        RT-Thread DFS 代码
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../RT-Thread-DFS/" class="md-nav__link">
+        RT-Thread DFS 设计抽象
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../meeting/" class="md-nav__link">
+        2023_04_03 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+          2023 04 16
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4_3">
+          <span class="md-nav__icon md-icon"></span>
+          2023 04 16
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2023_04_16/meeting/" class="md-nav__link">
+        2023_04_16 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2023_04_16/%E4%B8%8D%E5%90%8C%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%B9%8B%E9%97%B4%E7%9A%84%E5%8C%BA%E5%88%AB/" class="md-nav__link">
+        不同文件系统之间的区别
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2023_04_16/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%BA%93%E6%94%AF%E6%8C%81/" class="md-nav__link">
+        文件系统的库支持
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+          2023 04 19
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4_4">
+          <span class="md-nav__icon md-icon"></span>
+          2023 04 19
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2023_04_19/meeting/" class="md-nav__link">
+        2023_04_19 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+          2023 04 23
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_4_5">
+          <span class="md-nav__icon md-icon"></span>
+          2023 04 23
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../2023_04_23/meeting/" class="md-nav__link">
+        2023_04_23 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          Final
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Final
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_1" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_1" id="__nav_5_1_label" tabindex="0">
+          2023 07 03
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_1_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5_1">
+          <span class="md-nav__icon md-icon"></span>
+          2023 07 03
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final/2023_07_03/meeting/" class="md-nav__link">
+        2023_07_03 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+          2023 07 05
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_5_2">
+          <span class="md-nav__icon md-icon"></span>
+          2023 07 05
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../final/2023_07_05/meeting/" class="md-nav__link">
+        2023_07_05 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          Mid report
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Mid report
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_1" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_1" id="__nav_6_1_label" tabindex="0">
+          2023 05 03
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_1_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_1">
+          <span class="md-nav__icon md-icon"></span>
+          2023 05 03
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../mid_report/2023_05_03/meeting/" class="md-nav__link">
+        2023_05_03 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+          2023 05 09
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_2">
+          <span class="md-nav__icon md-icon"></span>
+          2023 05 09
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../mid_report/2023_05_09/meeting/" class="md-nav__link">
+        2023_05_09 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_3" id="__nav_6_3_label" tabindex="0">
+          2023 05 17
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_3">
+          <span class="md-nav__icon md-icon"></span>
+          2023 05 17
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../mid_report/2023_05_17/meeting/" class="md-nav__link">
+        2023_05_17 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+          2023 05 30
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_4">
+          <span class="md-nav__icon md-icon"></span>
+          2023 05 30
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../mid_report/2023_05_30/meeting/" class="md-nav__link">
+        2023_05_30 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_5" id="__nav_6_5_label" tabindex="0">
+          2023 06 02
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_5">
+          <span class="md-nav__icon md-icon"></span>
+          2023 06 02
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../mid_report/2023_06_02/meeting/" class="md-nav__link">
+        2023_06_02 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_6" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_6" id="__nav_6_6_label" tabindex="0">
+          2023 06 03
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_6_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_6">
+          <span class="md-nav__icon md-icon"></span>
+          2023 06 03
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../mid_report/2023_06_03/meeting/" class="md-nav__link">
+        2023_06_03 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_7" id="__nav_6_7_label" tabindex="0">
+          2023 06 07
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_7_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_7">
+          <span class="md-nav__icon md-icon"></span>
+          2023 06 07
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../mid_report/2023_06_07/meeting/" class="md-nav__link">
+        2023_06_07 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_8" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_8" id="__nav_6_8_label" tabindex="0">
+          2023 06 09
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_8_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_8">
+          <span class="md-nav__icon md-icon"></span>
+          2023 06 09
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../mid_report/2023_06_09/meeting/" class="md-nav__link">
+        2023_06_09 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_9" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6_9" id="__nav_6_9_label" tabindex="0">
+          2023 06 19
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_9_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_6_9">
+          <span class="md-nav__icon md-icon"></span>
+          2023 06 19
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../mid_report/2023_06_19/meeting/" class="md-nav__link">
+        2023_06_19 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          Pre discussion
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          Pre discussion
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_1" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7_1" id="__nav_7_1_label" tabindex="0">
+          2023 03 12
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_1_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7_1">
+          <span class="md-nav__icon md-icon"></span>
+          2023 03 12
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/2023_03_12/IoTOS_research/" class="md-nav__link">
+        IoTOS 前置调研
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/2023_03_12/Linux%E5%AE%9E%E6%97%B6%E6%80%A7%E6%94%B9%E8%BF%9B/" class="md-nav__link">
+        Linux实时性改进
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/2023_03_12/Operating%20System%20for%20IoT/" class="md-nav__link">
+        Operating System for IoT
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/2023_03_12/ROS%20Application/" class="md-nav__link">
+        ROS Application
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/2023_03_12/distributed_computing/" class="md-nav__link">
+        分布式计算 简要调研
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/2023_03_12/hotfix/" class="md-nav__link">
+        Hotfix
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/2023_03_12/meeting/" class="md-nav__link">
+        2023_03_12 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/2023_03_12/safe%20container/" class="md-nav__link">
+        Safe container
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7_2" id="__nav_7_2_label" tabindex="0">
+          2023 03 17
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_2_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7_2">
+          <span class="md-nav__icon md-icon"></span>
+          2023 03 17
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/2023_03_17/distributed_computing/" class="md-nav__link">
+        分布式计算 on 嵌入式设备
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/2023_03_17/meeting/" class="md-nav__link">
+        2023_03_17 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7_3" id="__nav_7_3_label" tabindex="0">
+          2023 03 24
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_3_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7_3">
+          <span class="md-nav__icon md-icon"></span>
+          2023 03 24
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/2023_03_24/MMU/" class="md-nav__link">
+        MMU （内存管理单元）
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/2023_03_24/file%20system/" class="md-nav__link">
+        File system
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/2023_03_24/file_system_on_embeded_device/" class="md-nav__link">
+        嵌入式设备的文件系统
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/2023_03_24/file_system_optimization/" class="md-nav__link">
+        文件系统优化方向
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/2023_03_24/meeting/" class="md-nav__link">
+        2023_03_24 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/2023_03_24/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%BC%80%E5%8F%91%E8%B0%83%E7%A0%94/" class="md-nav__link">
+        文件系统开发
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/2023_03_24/%E8%99%9A%E6%8B%9F%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" class="md-nav__link">
+        调研报告
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/2023_03_24/%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF/" class="md-nav__link">
+        项目背景
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7_4" id="__nav_7_4_label" tabindex="0">
+          2023 03 30
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_4_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7_4">
+          <span class="md-nav__icon md-icon"></span>
+          2023 03 30
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/2023_03_30/meeting/" class="md-nav__link">
+        2023_03_30 会议记录
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7_5" id="__nav_7_5_label" tabindex="0">
+          Ref
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_7_5_label" aria-expanded="false">
+        <label class="md-nav__title" for="__nav_7_5">
+          <span class="md-nav__icon md-icon"></span>
+          Ref
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/ref/pre_research_temp/" class="md-nav__link">
+        Pre-Research
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pre_discussion/ref/previous_projects/" class="md-nav__link">
+        预调研
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    Overview
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#freertos-stdlibh" class="md-nav__link">
+    FreeRtos 中 stdlib.h
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ff_write" class="md-nav__link">
+    FF_Write()
+  </a>
+  
+    <nav class="md-nav" aria-label="FF_Write()">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ff_write_1" class="md-nav__link">
+    FF_Write() 调用的函数
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ff_device_write" class="md-nav__link">
+    FF_Device_Write
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ff_open" class="md-nav__link">
+    FF_Open
+  </a>
+  
+    <nav class="md-nav" aria-label="FF_Open">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ff_file" class="md-nav__link">
+    FF_FILE
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="lab-project-freertos-fat">Lab-Project-FreeRTOS-FAT 中的标准文件操作</h1>
+<h2 id="overview">Overview</h2>
+<p>在本文中，将大致介绍 Lab-Project-FreeRTOS-FAT 中的标准文件操作，主要以 ff_fwrite 为例。</p>
+<p><code>ff_fwrite</code> 函数定义：</p>
+<pre><code class="language-C">size_t ff_fwrite( const void * pvBuffer,
+                  size_t xSize,
+                  size_t xItems,
+                  FF_FILE * pxStream )
+{
+    int32_t iReturned;
+    size_t xReturn;
+    int ff_errno;
+
+    #if ( ffconfigDEV_SUPPORT != 0 )
+        if( pxStream-&gt;pxDevNode != NULL )
+        {
+            iReturned = FF_Device_Write( pvBuffer, xSize, xItems, pxStream );
+        }
+        else
+    #endif
+    {
+        iReturned = FF_Write( pxStream, xSize, xItems, ( uint8_t * ) pvBuffer );
+    }
+
+    ff_errno = prvFFErrorToErrno( iReturned );
+
+    if( ff_errno == pdFREERTOS_ERRNO_NONE )
+    {
+        /* As per the standard fwrite() semantics, the return value is the
+         * number of complete items read, which will only equal the number of bytes
+         * transferred when the item size is 1. */
+        xReturn = ( size_t ) iReturned;
+    }
+    else
+    {
+        xReturn = 0;
+    }
+
+    /* Store the errno to thread local storage. */
+    stdioSET_ERRNO( ff_errno );
+
+    return xReturn;
+}
+/*-----------------------------------------------------------*/
+</code></pre>
+<p>这段代码实现了写入文件的函数 <code>ff_fwrite</code>。该函数接受四个参数：要写入的数据的指针 <code>pvBuffer</code>，每个数据项的大小 <code>xSize</code>，要写入的数据项的数量 <code>xItems</code>，以及一个指向要写入的文件的指针 <code>pxStream</code>。</p>
+<p>函数首先通过判断 <code>pxStream</code> 的 <code>pxDevNode</code> 是否为 NULL，来确定是使用设备驱动器写入文件还是使用文件系统写入文件。如果 <code>pxDevNode</code> 不为 NULL，则说明要写入的文件是设备文件，将调用 <code>FF_Device_Write</code> 函数来实现写入。否则将调用 <code>FF_Write</code> 函数来实现写入。</p>
+<p>函数返回值 <code>xReturn</code> 的计算方式符合标准库函数 <code>fwrite</code> 的语义。即，如果每个数据项的大小为 1，则返回值是实际写入的字节数；否则返回值是实际写入的完整数据项的数量。</p>
+<p>函数最后将发生的错误通过 <code>prvFFErrorToErrno</code> 函数转换为标准错误码，并将其存储到线程本地存储中。</p>
+<h2 id="freertos-stdlibh">FreeRtos 中 <code>stdlib.h</code></h2>
+<pre><code class="language-C">/*
+ * File:        stdlib.h
+ * Purpose:     Function prototypes for standard library functions
+ *
+ * Notes:
+ */
+
+#ifndef _STDLIB_H
+#define _STDLIB_H
+
+/********************************************************************
+ * Standard library functions
+ ********************************************************************/
+
+int
+isspace (int);
+
+int
+isalnum (int);
+
+int
+isdigit (int);
+
+int
+isupper (int);
+
+int
+strcasecmp (const char *, const char *);
+
+int
+strncasecmp (const char *, const char *, int);
+
+unsigned long
+strtoul (char *, char **, int);
+
+int
+strlen (const char *);
+
+char *
+strcat (char *, const char *);
+
+char *
+strncat (char *, const char *, int);
+
+char *
+strcpy (char *, const char *);
+
+char *
+strncpy (char *, const char *, int);
+
+int
+strcmp (const char *, const char *);
+
+int
+strncmp (const char *, const char *, int);
+
+void *
+memcpy (void *, const void *, unsigned);
+
+void *
+memset (void *, int, unsigned);
+
+void
+free (void *);
+
+void *
+malloc (unsigned);
+
+#define RAND_MAX 32767
+
+int
+rand (void);
+
+void
+srand (int);
+
+/********************************************************************/
+
+#endif
+</code></pre>
+<p>这些函数通过最基础的 C 语法实现。</p>
+<p>几乎所有文件读写操作都需要这些函数以进行对内存空间的直接控制。</p>
+<h2 id="ff_write">FF_Write()</h2>
+<p>位于 <code>ff_file.c</code> 中。</p>
+<pre><code class="language-C">/**
+ *  @public
+ *  @brief  Writes data to a File.
+ *
+ *  @param  pxFile          FILE Pointer.
+ *  @param  ulElementSize       Size of an Element of Data to be copied. (in bytes).
+ *  @param  ulCount         Number of Elements of Data to be copied. (ulElementSize * ulCount must not exceed ((2^31)-1) bytes. (2GB). For best performance, multiples of 512 bytes or Cluster sizes are best.
+ *  @param  pucBuffer           Byte-wise pucBuffer containing the data to be written.
+ *
+ * FF_Read() and FF_Write() work very similar. They both complete their task in 5 steps:
+ *  1. Write bytes up to a sector border:  FF_WritePartial()
+ *  2. Write sectors up to cluster border: FF_BlockWrite()
+ *  3. Write complete clusters:            FF_WriteClusters()
+ *  4. Write remaining sectors:            FF_BlockWrite()
+ *  5. Write remaining bytes:              FF_WritePartial()
+ *  @return
+ **/
+int32_t FF_Write( FF_FILE * pxFile,
+                  uint32_t ulElementSize,
+                  uint32_t ulCount,
+                  uint8_t * pucBuffer )
+{
+    uint32_t ulBytesLeft = ulElementSize * ulCount;
+    uint32_t nBytesWritten = 0;
+    uint32_t nBytesToWrite;
+    FF_IOManager_t * pxIOManager;
+    uint32_t ulRelBlockPos;
+    uint32_t ulItemLBA;
+    int32_t lResult;
+    uint32_t ulSectors;
+    uint32_t ulRelClusterPos;
+    uint32_t ulBytesPerCluster;
+    FF_Error_t xError;
+
+    if( pxFile == NULL )
+    {
+        xError = ( FF_Error_t ) ( FF_ERR_NULL_POINTER | FF_READ );
+    }
+    else
+    {
+        /* Check validity of the handle and the current position within the file. */
+        xError = FF_CheckValid( pxFile );
+
+        if( FF_isERR( xError ) == pdFALSE )
+        {
+            if( ( pxFile-&gt;ucMode &amp; FF_MODE_WRITE ) == 0 )
+            {
+                xError = ( FF_Error_t ) ( FF_ERR_FILE_NOT_OPENED_IN_WRITE_MODE | FF_WRITE );
+            }
+            /* Make sure a write is after the append point. */
+            else if( ( pxFile-&gt;ucMode &amp; FF_MODE_APPEND ) != 0 )
+            {
+                if( pxFile-&gt;ulFilePointer &lt; pxFile-&gt;ulFileSize )
+                {
+                    xError = FF_Seek( pxFile, 0, FF_SEEK_END );
+                }
+            }
+        }
+    }
+
+    if( FF_isERR( xError ) == pdFALSE )
+    {
+        pxIOManager = pxFile-&gt;pxIOManager;
+
+        /* Open a do{} while( 0 ) loop to allow the use of breaks */
+        do
+        {
+            /* Extend File for at least ulBytesLeft!
+             * Handle file-space allocation
+             + 1 byte because the code assumes there is always a next cluster */
+            xError = FF_ExtendFile( pxFile, pxFile-&gt;ulFilePointer + ulBytesLeft + 1 );
+
+            if( FF_isERR( xError ) )
+            {
+                /* On every error, break from the while( 0 ) loop. */
+                break;
+            }
+
+            ulRelBlockPos = FF_getMinorBlockEntry( pxIOManager, pxFile-&gt;ulFilePointer, 1 ); /* Get the position within a block. */
+            ulItemLBA = FF_SetCluster( pxFile, &amp;xError );
+
+            if( FF_isERR( xError ) )
+            {
+                break;
+            }
+
+            if( ( ulRelBlockPos + ulBytesLeft ) &lt;= ( uint32_t ) pxIOManager-&gt;usSectorSize )
+            {
+                /* Bytes to write are within a block and and do not go passed the current block. */
+                nBytesWritten = FF_WritePartial( pxFile, ulItemLBA, ulRelBlockPos, ulBytesLeft, pucBuffer, &amp;xError );
+                break;
+            }
+
+            /*---------- Write (memcpy) to a Sector Boundary. */
+            if( ulRelBlockPos != 0 )
+            {
+                /* Not writing on a sector boundary, at this point the LBA is known. */
+                nBytesToWrite = pxIOManager-&gt;usSectorSize - ulRelBlockPos;
+                nBytesWritten = FF_WritePartial( pxFile, ulItemLBA, ulRelBlockPos, nBytesToWrite, pucBuffer, &amp;xError );
+
+                if( FF_isERR( xError ) )
+                {
+                    break;
+                }
+
+                ulBytesLeft -= nBytesWritten;
+                pucBuffer += nBytesWritten;
+            }
+
+            /*---------- Write sectors, up to a Cluster Boundary. */
+            ulBytesPerCluster = ( pxIOManager-&gt;xPartition.ulSectorsPerCluster * pxIOManager-&gt;usSectorSize );
+            ulRelClusterPos = FF_getClusterPosition( pxIOManager, pxFile-&gt;ulFilePointer, 1 );
+
+            if( ( ulRelClusterPos != 0 ) &amp;&amp; ( ( ulRelClusterPos + ulBytesLeft ) &gt;= ulBytesPerCluster ) )
+            {
+                /* Need to get to cluster boundary */
+                ulItemLBA = FF_SetCluster( pxFile, &amp;xError );
+
+                if( FF_isERR( xError ) )
+                {
+                    break;
+                }
+
+                ulSectors = pxIOManager-&gt;xPartition.ulSectorsPerCluster - ( ulRelClusterPos / pxIOManager-&gt;usSectorSize );
+                xError = FF_BlockWrite( pxIOManager, ulItemLBA, ulSectors, pucBuffer, pdFALSE );
+
+                if( FF_isERR( xError ) )
+                {
+                    break;
+                }
+
+                nBytesToWrite = ulSectors * pxIOManager-&gt;usSectorSize;
+                ulBytesLeft -= nBytesToWrite;
+                pucBuffer += nBytesToWrite;
+                nBytesWritten += nBytesToWrite;
+                pxFile-&gt;ulFilePointer += nBytesToWrite;
+
+                if( pxFile-&gt;ulFilePointer &gt; pxFile-&gt;ulFileSize )
+                {
+                    pxFile-&gt;ulFileSize = pxFile-&gt;ulFilePointer;
+                }
+            }
+
+            /*---------- Write entire Clusters. */
+            if( ulBytesLeft &gt;= ulBytesPerCluster )
+            {
+                uint32_t ulClusters;
+
+                FF_SetCluster( pxFile, &amp;xError );
+
+                if( FF_isERR( xError ) )
+                {
+                    break;
+                }
+
+                ulClusters = ( ulBytesLeft / ulBytesPerCluster );
+
+                xError = FF_WriteClusters( pxFile, ulClusters, pucBuffer );
+
+                if( FF_isERR( xError ) )
+                {
+                    break;
+                }
+
+                nBytesToWrite = ulBytesPerCluster * ulClusters;
+                ulBytesLeft -= nBytesToWrite;
+                pucBuffer += nBytesToWrite;
+                nBytesWritten += nBytesToWrite;
+                pxFile-&gt;ulFilePointer += nBytesToWrite;
+
+                if( pxFile-&gt;ulFilePointer &gt; pxFile-&gt;ulFileSize )
+                {
+                    pxFile-&gt;ulFileSize = pxFile-&gt;ulFilePointer;
+                }
+            }
+
+            /*---------- Write Remaining Blocks */
+            while( ulBytesLeft &gt;= ( uint32_t ) pxIOManager-&gt;usSectorSize )
+            {
+                ulSectors = ulBytesLeft / pxIOManager-&gt;usSectorSize;
+                {
+                    /* HT: I'd leave these pPart/ulOffset for readability... */
+                    FF_Partition_t * pPart = &amp;( pxIOManager-&gt;xPartition );
+                    uint32_t ulOffset = ( pxFile-&gt;ulFilePointer / pxIOManager-&gt;usSectorSize ) % pPart-&gt;ulSectorsPerCluster;
+                    uint32_t ulRemain = pPart-&gt;ulSectorsPerCluster - ulOffset;
+
+                    if( ulSectors &gt; ulRemain )
+                    {
+                        ulSectors = ulRemain;
+                    }
+                }
+
+                ulItemLBA = FF_SetCluster( pxFile, &amp;xError );
+
+                if( FF_isERR( xError ) )
+                {
+                    break;
+                }
+
+                xError = FF_BlockWrite( pxIOManager, ulItemLBA, ulSectors, pucBuffer, pdFALSE );
+
+                if( FF_isERR( xError ) )
+                {
+                    break;
+                }
+
+                nBytesToWrite = ulSectors * pxIOManager-&gt;usSectorSize;
+                ulBytesLeft -= nBytesToWrite;
+                pucBuffer += nBytesToWrite;
+                nBytesWritten += nBytesToWrite;
+                pxFile-&gt;ulFilePointer += nBytesToWrite;
+
+                if( pxFile-&gt;ulFilePointer &gt; pxFile-&gt;ulFileSize )
+                {
+                    pxFile-&gt;ulFileSize = pxFile-&gt;ulFilePointer;
+                }
+            }
+
+            /*---------- Write (memcpy) Remaining Bytes */
+            if( ulBytesLeft == 0 )
+            {
+                break;
+            }
+
+            ulItemLBA = FF_SetCluster( pxFile, &amp;xError );
+
+            if( FF_isERR( xError ) )
+            {
+                break;
+            }
+
+            FF_WritePartial( pxFile, ulItemLBA, 0, ulBytesLeft, pucBuffer, &amp;xError );
+            nBytesWritten += ulBytesLeft;
+        }
+        while( pdFALSE );
+    }
+
+    if( FF_isERR( xError ) )
+    {
+        lResult = xError;
+    }
+    else
+    {
+        lResult = ( int32_t ) ( nBytesWritten / ulElementSize );
+    }
+
+    return lResult;
+} /* FF_Write() */
+/*-----------------------------------------------------------*/
+</code></pre>
+<p>该函数名为 <code>FF_Write</code>，接收四个参数：</p>
+<ol>
+<li>一个 <code>FF_FILE</code> 类型的指针 <code>pxFile</code>，表示要写入数据的文件；</li>
+<li>一个 <code>uint32_t</code> 类型的变量 <code>ulElementSize</code>，表示每个数据元素的大小；</li>
+<li>一个 <code>uint32_t</code> 类型的变量 <code>ulCount</code>，表示要写入的数据元素个数；</li>
+<li>一个 <code>uint8_t</code> 类型的指针 <code>pucBuffer</code>，表示要写入的数据缓冲区。</li>
+</ol>
+<p>函数首先会检查传入的文件指针 <code>pxFile</code> 是否为空，如果为空则返回一个错误代码。否则，函数会进一步检查文件是否处于正确的模式（写入模式），并判断是否需要将写入位置调整到文件末尾（如果文件处于追加模式且写入位置在文件中间，则需要将写入位置移到文件末尾）。如果一切检查都通过，则会调用一系列子函数来执行实际的写入操作。</p>
+<p>在写入过程中，函数会按照一定的策略将数据写入文件中。具体来说，它会首先判断待写入的数据是否可以全部写入当前数据块中。如果可以，则直接调用一个名为 <code>FF_WritePartial</code> 的子函数将数据写入该数据块中。如果不行，则需要将数据分成若干个部分，分别写入当前数据块、当前簇（一个簇包含多个数据块）、以及后续的簇中，直到全部写入完成为止。</p>
+<p>整个函数的代码比较长，其中包含了不少细节处理和错误处理的代码。它的主要目的是将数据写入文件中，并确保写入操作不会破坏文件的完整性和正确性。</p>
+<h3 id="ff_write_1">FF_Write() 调用的函数</h3>
+<p>以 <code>FF_WritePartial()</code> 为例：</p>
+<pre><code class="language-C">static int32_t FF_WritePartial( FF_FILE * pxFile,
+                                uint32_t ulItemLBA,
+                                uint32_t ulRelBlockPos,
+                                uint32_t ulCount,
+                                const uint8_t * pucBuffer,
+                                FF_Error_t * pxError )
+{
+    FF_Error_t xError;
+    uint32_t ulBytesWritten;
+
+    #if ( ffconfigOPTIMISE_UNALIGNED_ACCESS != 0 )
+        {
+            BaseType_t xLastRead;
+
+            if( ( ulRelBlockPos + ulCount ) &gt;= ( uint32_t ) pxFile-&gt;pxIOManager-&gt;usSectorSize )
+            {
+                /* After this read, ulFilePointer will point to the next block/sector. */
+                xLastRead = pdTRUE;
+            }
+            else
+            {
+                /* It is not the last read within this block/sector. */
+                xLastRead = pdFALSE;
+            }
+
+            if( ( ( pxFile-&gt;ucState &amp; FF_BUFSTATE_VALID ) == 0 ) &amp;&amp;
+                ( ( ulRelBlockPos != 0 ) || ( pxFile-&gt;ulFilePointer &lt; pxFile-&gt;ulFileSize ) ) )
+            {
+                xError = FF_BlockRead( pxFile-&gt;pxIOManager, ulItemLBA, 1, pxFile-&gt;pucBuffer, pdFALSE );
+                /* pxFile-&gt;ucState will be set later on. */
+            }
+            else
+            {
+                xError = FF_ERR_NONE;
+
+                /* the buffer is valid or a whole block/sector will be written, so it is
+                 * not necessary to read the contents first. */
+            }
+
+            if( FF_isERR( xError ) == pdFALSE )
+            {
+                memcpy( pxFile-&gt;pucBuffer + ulRelBlockPos, pucBuffer, ulCount );
+
+                if( xLastRead == pdTRUE )
+                {
+                    xError = FF_BlockWrite( pxFile-&gt;pxIOManager, ulItemLBA, 1, pxFile-&gt;pucBuffer, pdFALSE );
+                    pxFile-&gt;ucState = FF_BUFSTATE_INVALID;
+                }
+                else
+                {
+                    pxFile-&gt;ucState |= FF_BUFSTATE_WRITTEN | FF_BUFSTATE_VALID;
+                }
+            }
+            else
+            {
+                pxFile-&gt;ucState = FF_BUFSTATE_INVALID;
+            }
+        }
+    #else /* if ( ffconfigOPTIMISE_UNALIGNED_ACCESS != 0 ) */
+        {
+            FF_Buffer_t * pxBuffer;
+
+            if( ( ulRelBlockPos == 0 ) &amp;&amp; ( pxFile-&gt;ulFilePointer &gt;= pxFile-&gt;ulFileSize ) )
+            {
+                /* An entire sector will be written. */
+                pxBuffer = FF_GetBuffer( pxFile-&gt;pxIOManager, ulItemLBA, FF_MODE_WR_ONLY );
+            }
+            else
+            {
+                /* A partial write will be done, make sure to read the contents before
+                 * changing anything. */
+                pxBuffer = FF_GetBuffer( pxFile-&gt;pxIOManager, ulItemLBA, FF_MODE_WRITE );
+            }
+
+            if( pxBuffer == NULL )
+            {
+                xError = ( FF_Error_t ) ( FF_ERR_DEVICE_DRIVER_FAILED | FF_WRITE );
+            }
+            else
+            {
+                /* Here we copy to the sector boundary. */
+                memcpy( ( pxBuffer-&gt;pucBuffer + ulRelBlockPos ), pucBuffer, ulCount );
+
+                xError = FF_ReleaseBuffer( pxFile-&gt;pxIOManager, pxBuffer );
+            }
+        }
+    #endif /* if ( ffconfigOPTIMISE_UNALIGNED_ACCESS != 0 ) */
+
+    if( FF_isERR( xError ) == pdFALSE )
+    {
+        pxFile-&gt;ulFilePointer += ulCount;
+        ulBytesWritten = ulCount;
+
+        if( pxFile-&gt;ulFilePointer &gt; pxFile-&gt;ulFileSize )
+        {
+            pxFile-&gt;ulFileSize = pxFile-&gt;ulFilePointer;
+        }
+    }
+    else
+    {
+        ulBytesWritten = 0ul;
+    }
+
+    *pxError = xError;
+
+    return ulBytesWritten;
+} /* FF_WritePartial() */
+/*-----------------------------------------------------------*/
+</code></pre>
+<p>这段代码是用于在FatFs文件系统中写入部分数据到文件中的函数 <code>FF_WritePartial()</code>。该函数接受一个指向打开的文件的指针 <code>pxFile</code>，一个要写入的数据缓冲区指针 <code>pucBuffer</code>，以及其他一些参数。该函数的作用是将数据从缓冲区写入到文件中，同时更新文件指针和文件大小。</p>
+<p>该函数包含一个条件编译的块，其根据编译时的宏定义，使用不同的写入策略。如果 <code>ffconfigOPTIMISE_UNALIGNED_ACCESS</code> 宏定义为非零，则使用优化后的策略，否则使用标准策略。</p>
+<p>对于优化策略，首先判断是否需要读取文件块到缓冲区中。如果当前缓冲区无效，或者写入的起始位置不在块的起始位置，或者文件指针指向的位置不在文件的结尾，则需要读取文件块到缓冲区中。如果读取失败，则返回错误。如果读取成功，则将数据复制到缓冲区，并根据是否是块的最后一次写入决定是否将缓冲区的内容写回到存储介质中。如果是最后一次写入，则调用 <code>FF_BlockWrite()</code> 函数将缓冲区写入到存储介质中，并将缓冲区标记为无效状态；否则将缓冲区标记为已写入和有效状态。</p>
+<p>对于标准策略，首先根据写入的起始位置和文件指针的位置判断是否需要读取文件块到缓冲区中。然后从 <code>FF_GetBuffer()</code> 函数中获取一个可写的缓冲区，将数据复制到缓冲区，并调用 <code>FF_ReleaseBuffer()</code> 函数释放缓冲区。如果获取缓冲区失败，则返回错误。</p>
+<p>最后，如果写入成功，则更新文件指针和文件大小，并将错误代码存储在 <code>pxError</code> 指针所指向的位置，并返回实际写入的字节数。否则返回 0。</p>
+<p>其中最基础的数据写入 <code>memcpy()</code> 定义如下：</p>
+<pre><code class="language-C">void *
+memcpy (void *dest, const void *src, unsigned n)
+{
+    unsigned char *dbp = (unsigned char *)dest;
+    unsigned char *sbp = (unsigned char *)src;
+
+    if ((dest != NULL) &amp;&amp; (src != NULL) &amp;&amp; (n &gt; 0))
+    {
+      while (n--)
+            *dbp++ = *sbp++;
+    }
+    return dest;
+}
+
+/****************************************************************/
+</code></pre>
+<p>这段代码是标准库函数 <code>memcpy()</code> 的实现。<code>memcpy()</code> 函数用于将一段内存的内容复制到另一段内存中，参数包括要复制的目标地址、源地址和要复制的字节数。</p>
+<p>该函数首先将目标地址和源地址强制转换为 <code>unsigned char</code> 类型的指针，以便逐字节地进行复制。然后它通过一个 <code>while</code> 循环将源地址中的内容一个一个字节地复制到目标地址中，直到复制完成。如果目标地址或源地址为 <code>NULL</code> 或者要复制的字节数小于等于 0，则不进行复制操作。</p>
+<p>最后，函数返回目标地址的指针，表示复制操作已完成。</p>
+<h2 id="ff_device_write">FF_Device_Write</h2>
+<p>函数定义于 <code>ff_dev_support.c</code> 中：</p>
+<pre><code class="language-C">size_t FF_Device_Write( const void * pvBuf,
+                        size_t lSize,
+                        size_t lCount,
+                        FF_FILE * pxStream )
+{
+    lCount *= lSize;
+
+    if( pxStream-&gt;pxDevNode != NULL )
+    {
+        pxStream-&gt;pxDevNode-&gt;ulFilePointer += lCount;
+
+        if( pxStream-&gt;pxDevNode-&gt;ulFileLength &lt; pxStream-&gt;pxDevNode-&gt;ulFilePointer )
+        {
+            pxStream-&gt;pxDevNode-&gt;ulFileLength = pxStream-&gt;pxDevNode-&gt;ulFilePointer;
+        }
+    }
+
+    return lCount;
+}
+</code></pre>
+<p>这段代码定义了一个名为 <code>FF_Device_Write</code> 的函数，该函数是用于在外部设备上进行写操作的。它有四个参数：指向要写入数据的缓冲区的指针 <code>pvBuf</code>，要写入的数据项的大小 <code>lSize</code>，要写入的数据项的数量 <code>lCount</code>，以及指向表示文件的 <code>FF_FILE</code> 结构的指针 <code>pxStream</code>。</p>
+<p>函数首先将要写入的数据总大小 <code>lCount</code> 计算出来，然后检查是否存在外部设备节点。如果指向 <code>pxStream</code> 的指针中的 <code>pxDevNode</code> 不为 NULL，则表示存在外部设备节点。函数会将设备指针移动到文件中的当前位置加上 <code>lCount</code>，以表示下一次写操作应该从哪里开始写入数据。然后函数会检查设备节点中的 <code>ulFileLength</code> 是否小于新的文件指针位置。如果是，它会将 <code>ulFileLength</code> 设置为新的文件指针位置，以表示文件的大小已经增加。</p>
+<p>最后，函数返回 <code>lCount</code>，即写入数据的总大小，以指示写操作成功完成。</p>
+<h2 id="ff_open">FF_Open</h2>
+<p>另外以下将大致对 <code>FF_Open</code> 进行大致介绍。</p>
+<p>位于 <code>ff_file.c</code> 中。</p>
+<pre><code class="language-C">/**
+ *  @public
+ *  @brief  Opens a File for Access
+ *
+ *  @param  pxIOManager FF_IOManager_t object that was created by FF_CreateIOManager().
+ *  @param  pcPath      Path to the File or object.
+ *  @param  ucMode      Access Mode required. Modes are a little complicated, the function FF_GetModeBits()
+ *  @param  ucMode      will convert a stdio Mode string into the equivalent Mode bits for this parameter.
+ *  @param  pxError     Pointer to a signed byte for error checking. Can be NULL if not required.
+ *  @param  pxError     To be checked when a NULL pointer is returned.
+ *
+ *  @return NULL pointer on error, in which case pxError should be checked for more information.
+ *  @return pxError can be:
+ **/
+/* *INDENT-OFF* */
+#if ( ffconfigUNICODE_UTF16_SUPPORT != 0 )
+    FF_FILE * FF_Open( FF_IOManager_t * pxIOManager,
+                       const FF_T_WCHAR * pcPath,
+                       uint8_t ucMode,
+                       FF_Error_t * pxError )
+#else
+    FF_FILE * FF_Open( FF_IOManager_t * pxIOManager,
+                       const char * pcPath,
+                       uint8_t ucMode,
+                       FF_Error_t * pxError )
+#endif
+/* *INDENT-ON* */
+{
+    FF_FILE * pxFile = NULL;
+    FF_FILE * pxFileChain;
+    FF_DirEnt_t xDirEntry;
+    uint32_t ulFileCluster;
+    FF_Error_t xError;
+    BaseType_t xIndex;
+    FF_FindParams_t xFindParams;
+
+    #if ( ffconfigUNICODE_UTF16_SUPPORT != 0 )
+        FF_T_WCHAR pcFileName[ ffconfigMAX_FILENAME ];
+    #else
+        char pcFileName[ ffconfigMAX_FILENAME ];
+    #endif
+
+    #if ( ffconfigPROTECT_FF_FOPEN_WITH_SEMAPHORE == 1 )
+        {
+            if( ( ucMode &amp; FF_MODE_CREATE ) != 0U )
+            {
+                FF_PendSemaphore( pxIOManager-&gt;pvSemaphoreOpen );
+            }
+        }
+    #endif
+
+    memset( &amp;xFindParams, '\0', sizeof( xFindParams ) );
+
+    /* Inform the functions that the entry will be created if not found. */
+    if( ( ucMode &amp; FF_MODE_CREATE ) != 0 )
+    {
+        xFindParams.ulFlags |= FIND_FLAG_CREATE_FLAG;
+    }
+
+    if( pxIOManager == NULL )
+    {
+        /* Use the error function code 'FF_OPEN' as this static
+         * function is only called from that function. */
+        xError = ( FF_Error_t ) ( FF_ERR_NULL_POINTER | FF_OPEN );
+    }
+
+    #if ( ffconfigREMOVABLE_MEDIA != 0 )
+        else if( ( pxIOManager-&gt;ucFlags &amp; FF_IOMAN_DEVICE_IS_EXTRACTED ) != 0 )
+        {
+            xError = ( FF_Error_t ) ( FF_ERR_IOMAN_DRIVER_NOMEDIUM | FF_OPEN );
+        }
+    #endif /* ffconfigREMOVABLE_MEDIA */
+    else
+    {
+        xError = FF_ERR_NONE;
+
+        /* Let xIndex point to the last occurrence of '/' or '\',
+         * to separate the path from the file name. */
+        xIndex = ( BaseType_t ) STRLEN( pcPath );
+
+        while( xIndex != 0 )
+        {
+            if( ( pcPath[ xIndex ] == '\\' ) || ( pcPath[ xIndex ] == '/' ) )
+            {
+                break;
+            }
+
+            xIndex--;
+        }
+
+        /* Copy the file name, i.e. the string that comes after the last separator. */
+        STRNCPY( pcFileName, pcPath + xIndex + 1, ffconfigMAX_FILENAME - 1 );
+        pcFileName[ ffconfigMAX_FILENAME - 1 ] = 0;
+
+        if( xIndex == 0 )
+        {
+            /* Only for the root, the slash is part of the directory name.
+             * 'xIndex' now equals to the length of the path name. */
+            xIndex = 1;
+        }
+
+        /* FF_CreateShortName() might set flags FIND_FLAG_FITS_SHORT and FIND_FLAG_SIZE_OK. */
+        FF_CreateShortName( &amp;xFindParams, pcFileName );
+
+        /* Lookup the path and find the cluster pointing to the directory: */
+        xFindParams.ulDirCluster = FF_FindDir( pxIOManager, pcPath, xIndex, &amp;xError );
+
+        if( xFindParams.ulDirCluster == 0ul )
+        {
+            if( ( ucMode &amp; FF_MODE_WRITE ) != 0 )
+            {
+                FF_PRINTF( &quot;FF_Open[%s]: Path not found\n&quot;, pcPath );
+            }
+
+            /* The user tries to open a file but the path leading to the file does not exist. */
+        }
+        else if( FF_isERR( xError ) == pdFALSE )
+        {
+            /* Allocate an empty file handle and buffer space for 'unaligned access'. */
+            pxFile = prvAllocFileHandle( pxIOManager, &amp;xError );
+        }
+    }
+
+    if( FF_isERR( xError ) == pdFALSE )
+    {
+        /* Copy the Mode Bits. */
+        pxFile-&gt;ucMode = ucMode;
+
+        /* See if the file does exist within the given directory. */
+        ulFileCluster = FF_FindEntryInDir( pxIOManager, &amp;xFindParams, pcFileName, 0x00, &amp;xDirEntry, &amp;xError );
+
+        if( ulFileCluster == 0ul )
+        {
+            /* If cluster 0 was returned, it might be because the file has no allocated cluster,
+             * i.e. only a directory entry and no stored data. */
+            if( STRLEN( pcFileName ) == STRLEN( xDirEntry.pcFileName ) )
+            {
+                if( ( xDirEntry.ulFileSize == 0 ) &amp;&amp; ( FF_strmatch( pcFileName, xDirEntry.pcFileName, ( BaseType_t ) STRLEN( pcFileName ) ) == pdTRUE ) )
+                {
+                    /* It is the file, give it a pseudo cluster number '1'. */
+                    ulFileCluster = 1;
+                    /* And reset any error. */
+                    xError = FF_ERR_NONE;
+                }
+            }
+        }
+
+        /* Test 'ulFileCluster' again, it might have been changed. */
+        if( ulFileCluster == 0ul )
+        {
+            /* The path is found, but it does not contain the file name yet.
+             * Maybe the user wants to create it? */
+            if( ( ucMode &amp; FF_MODE_CREATE ) == 0 )
+            {
+                xError = ( FF_Error_t ) ( FF_ERR_FILE_NOT_FOUND | FF_OPEN );
+            }
+            else
+            {
+                ulFileCluster = FF_CreateFile( pxIOManager, &amp;xFindParams, pcFileName, &amp;xDirEntry, &amp;xError );
+
+                if( FF_isERR( xError ) == pdFALSE )
+                {
+                    xDirEntry.usCurrentItem += 1;
+                }
+            }
+        }
+    }
+
+    if( FF_isERR( xError ) == pdFALSE )
+    {
+        /* Now the file exists, or it has been created.
+         * Check if the Mode flags are allowed: */
+        if( ( xDirEntry.ucAttrib == FF_FAT_ATTR_DIR ) &amp;&amp; ( ( ucMode &amp; FF_MODE_DIR ) == 0 ) )
+        {
+            /* Not the object, File Not Found! */
+            xError = ( FF_Error_t ) ( FF_ERR_FILE_OBJECT_IS_A_DIR | FF_OPEN );
+        }
+        /*---------- Ensure Read-Only files don't get opened for Writing. */
+        else if( ( ( ucMode &amp; ( FF_MODE_WRITE | FF_MODE_APPEND ) ) != 0 ) &amp;&amp; ( ( xDirEntry.ucAttrib &amp; FF_FAT_ATTR_READONLY ) != 0 ) )
+        {
+            xError = ( FF_Error_t ) ( FF_ERR_FILE_IS_READ_ONLY | FF_OPEN );
+        }
+    }
+
+    if( FF_isERR( xError ) == pdFALSE )
+    {
+        pxFile-&gt;pxIOManager = pxIOManager;
+        pxFile-&gt;ulFilePointer = 0;
+
+        /* Despite the warning output by MSVC - it is not possible to get here
+         * if xDirEntry has not been initialised. */
+        pxFile-&gt;ulObjectCluster = xDirEntry.ulObjectCluster;
+        pxFile-&gt;ulFileSize = xDirEntry.ulFileSize;
+        pxFile-&gt;ulCurrentCluster = 0;
+        pxFile-&gt;ulAddrCurrentCluster = pxFile-&gt;ulObjectCluster;
+
+        pxFile-&gt;pxNext = NULL;
+        pxFile-&gt;ulDirCluster = xFindParams.ulDirCluster;
+        pxFile-&gt;usDirEntry = xDirEntry.usCurrentItem - 1;
+        pxFile-&gt;ulChainLength = 0;
+        pxFile-&gt;ulEndOfChain = 0;
+        pxFile-&gt;ulValidFlags &amp;= ~( FF_VALID_FLAG_DELETED );
+
+        /* Add pxFile onto the end of our linked list of FF_FILE objects.
+         * But first make sure that there are not 2 handles with write access
+         * to the same object. */
+        FF_PendSemaphore( pxIOManager-&gt;pvSemaphore );
+        {
+            pxFileChain = ( FF_FILE * ) pxIOManager-&gt;FirstFile;
+
+            if( pxFileChain == NULL )
+            {
+                pxIOManager-&gt;FirstFile = pxFile;
+            }
+            else
+            {
+                for( ; ; )
+                {
+                    /* See if two file handles point to the same object. */
+                    if( ( pxFileChain-&gt;ulObjectCluster == pxFile-&gt;ulObjectCluster ) &amp;&amp;
+                        ( pxFileChain-&gt;ulDirCluster == pxFile-&gt;ulDirCluster ) &amp;&amp;
+                        ( pxFileChain-&gt;usDirEntry == pxFile-&gt;usDirEntry ) )
+                    {
+                        /* Fail if any of the two has write access to the object. */
+                        if( ( ( pxFileChain-&gt;ucMode | pxFile-&gt;ucMode ) &amp; ( FF_MODE_WRITE | FF_MODE_APPEND ) ) != 0 )
+                        {
+                            /* File is already open! DON'T ALLOW IT! */
+                            xError = ( FF_Error_t ) ( FF_ERR_FILE_ALREADY_OPEN | FF_OPEN );
+                            break;
+                        }
+                    }
+
+                    if( pxFileChain-&gt;pxNext == NULL )
+                    {
+                        pxFileChain-&gt;pxNext = pxFile;
+                        break;
+                    }
+
+                    pxFileChain = ( FF_FILE * ) pxFileChain-&gt;pxNext;
+                }
+            }
+        }
+
+        FF_ReleaseSemaphore( pxIOManager-&gt;pvSemaphore );
+    }
+
+    if( FF_isERR( xError ) == pdFALSE )
+    {
+        /* If the file is opened with the truncate flag, truncate its contents. */
+        if( ( ucMode &amp; FF_MODE_TRUNCATE ) != 0 )
+        {
+            /* Set the current size and position to zero. */
+            pxFile-&gt;ulFileSize = 0;
+            pxFile-&gt;ulFilePointer = 0;
+        }
+    }
+
+    if( FF_isERR( xError ) != pdFALSE )
+    {
+        if( pxFile != NULL )
+        {
+            #if ( ffconfigOPTIMISE_UNALIGNED_ACCESS != 0 )
+                {
+                    ffconfigFREE( pxFile-&gt;pucBuffer );
+                }
+            #endif
+            ffconfigFREE( pxFile );
+        }
+
+        pxFile = NULL;
+    }
+
+    #if ( ffconfigPROTECT_FF_FOPEN_WITH_SEMAPHORE == 1 )
+        {
+            if( ( ucMode &amp; FF_MODE_CREATE ) != 0U )
+            {
+                FF_ReleaseSemaphore( pxIOManager-&gt;pvSemaphoreOpen );
+            }
+        }
+    #endif
+
+    if( pxError != NULL )
+    {
+        *pxError = xError;
+    }
+
+    return pxFile;
+} /* FF_Open() */
+/*-----------------------------------------------------------*/
+</code></pre>
+<p>这段代码定义了一个函数 <code>FF_Open()</code>，用于打开一个文件。函数有四个参数：<code>pxIOManager</code> 是一个 <code>FF_IOManager_t</code> 类型的指针，该类型包含了文件系统的一些参数信息；<code>pcPath</code> 是一个字符串，包含了文件的路径；<code>ucMode</code> 是一个 <code>uint8_t</code> 类型的参数，包含了对文件的访问模式；<code>pxError</code> 是一个指向 <code>FF_Error_t</code> 类型的指针，用于记录打开文件时可能出现的错误。</p>
+<p>在函数的实现过程中，它首先定义了一些变量，包括指向 <code>FF_FILE</code> 类型的指针 <code>pxFile</code>，用于存储打开的文件的信息；<code>xFindParams</code> 是一个 <code>FF_FindParams_t</code> 类型的结构体，包含了查找文件所需的一些参数信息；<code>pcFileName</code> 是一个字符数组，用于存储文件名。</p>
+<p>接着，函数会检查输入参数 <code>pxIOManager</code> 是否为 NULL，如果是，函数会将错误码设置为 <code>FF_ERR_NULL_POINTER | FF_OPEN</code>。如果 <code>pxIOManager</code> 不为 NULL，则函数会继续执行查找目录，创建文件等操作，最后返回一个指向 <code>FF_FILE</code> 类型的指针。</p>
+<h3 id="ff_file"><code>FF_FILE</code></h3>
+<p>文件打开模式：</p>
+<pre><code class="language-C">/**
+ * FF_Open() Mode Information
+ * - FF_MODE_WRITE
+ *   - Allows WRITE access to the file.
+ *   .
+ * - FF_MODE_READ
+ *   - Allows READ access to the file.
+ *   .
+ * - FF_MODE_CREATE
+ *   - Create file if it doesn't exist.
+ *   .
+ * - FF_MODE_TRUNCATE
+ *   - Erase the file if it already exists and overwrite.
+ *   *
+ * - FF_MODE_APPEND
+ *   - Causes all writes to occur at the end of the file. (Its impossible to overwrite other data in a file with this flag set).
+ *   .
+ * .
+ *
+ * Some sample modes:
+ * - (FF_MODE_WRITE | FF_MODE_CREATE | FF_MODE_TRUNCATE)
+ *   - Write access to the file. (Equivalent to &quot;w&quot;).
+ *   .
+ * - (FF_MODE_WRITE | FF_MODE_READ)
+ *   - Read and Write access to the file. (Equivalent to &quot;rb+&quot;).
+ *   .
+ * - (FF_MODE_WRITE | FF_MODE_READ | FF_MODE_APPEND | FF_MODE_CREATE)
+ *   - Read and Write append mode access to the file. (Equivalent to &quot;a+&quot;).
+ *   .
+ * .
+ * Be careful when choosing modes. For those using FF_Open() at the application layer
+ * its best to use the provided FF_GetModeBits() function, as this complies to the same
+ * behaviour as the stdio.h fopen() function.
+ *
+ **/
+</code></pre>
+<p>其中 FF_FILE 为相对重要的结构体，定义如下：</p>
+<pre><code class="language-C">typedef struct _FF_FILE
+{
+    FF_IOManager_t * pxIOManager;  /* Ioman Pointer! */
+    uint32_t ulFileSize;           /* File's Size. */
+    uint32_t ulObjectCluster;      /* File's Start Cluster. */
+    uint32_t ulChainLength;        /* Total Length of the File's cluster chain. */
+    uint32_t ulCurrentCluster;     /* Prevents FAT Thrashing. */
+    uint32_t ulAddrCurrentCluster; /* Address of the current cluster. */
+    uint32_t ulEndOfChain;         /* Address of the last cluster in the chain. */
+    uint32_t ulFilePointer;        /* Current Position Pointer. */
+    uint32_t ulDirCluster;         /* Cluster Number that the Dirent is in. */
+    uint32_t ulValidFlags;         /* Handle validation flags. */
+
+    #if ( ffconfigOPTIMISE_UNALIGNED_ACCESS != 0 )
+        uint8_t * pucBuffer; /* A buffer for providing fast unaligned access. */
+        uint8_t ucState;     /* State information about the buffer. */
+    #endif
+    uint8_t ucMode;          /* Mode that File Was opened in. */
+    uint16_t usDirEntry;     /* Dirent Entry Number describing this file. */
+
+    #if ( ffconfigDEV_SUPPORT != 0 )
+        struct SFileCache * pxDevNode;
+    #endif
+    struct _FF_FILE * pxNext; /* Pointer to the next file object in the linked list. */
+} FF_FILE;
+</code></pre>
+<p>这段代码定义了一个名为 <code>_FF_FILE</code> 的结构体，该结构体描述了 FatFs 文件系统中打开文件的状态。具体来说，该结构体包含以下字段：</p>
+<ul>
+<li><code>pxIOManager</code>：指向 <code>FF_IOManager_t</code> 结构体的指针，用于管理文件系统的输入/输出操作。</li>
+<li><code>ulFileSize</code>：文件的大小，以字节为单位。</li>
+<li><code>ulObjectCluster</code>：文件在文件系统中的起始簇号。</li>
+<li><code>ulChainLength</code>：文件的簇链的总长度，以簇为单位。</li>
+<li><code>ulCurrentCluster</code>：用于防止 FAT 争用的当前簇号。</li>
+<li><code>ulAddrCurrentCluster</code>：当前簇的地址。</li>
+<li><code>ulEndOfChain</code>：簇链中最后一个簇的地址。</li>
+<li><code>ulFilePointer</code>：文件当前读写位置的指针，以字节为单位。</li>
+<li><code>ulDirCluster</code>：描述该文件的目录项所在的簇号。</li>
+<li><code>ulValidFlags</code>：用于验证文件句柄的标志。</li>
+<li><code>pucBuffer</code>：一个用于提供快速非对齐访问的缓冲区（如果启用了非对齐访问优化）。</li>
+<li><code>ucState</code>：关于缓冲区状态的信息（如果启用了非对齐访问优化）。</li>
+<li><code>ucMode</code>：文件的打开模式。</li>
+<li><code>usDirEntry</code>：描述该文件的目录项在目录中的条目号。</li>
+<li><code>pxDevNode</code>：指向 <code>SFileCache</code> 结构体的指针，用于管理设备上的文件缓存（如果启用了设备支持）。</li>
+<li><code>pxNext</code>：指向链表中下一个文件对象的指针。</li>
+</ul>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.220ee61c.min.js"></script>
+      
+    
+  </body>
+</html>
