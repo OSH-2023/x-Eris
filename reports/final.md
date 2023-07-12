@@ -1,11 +1,53 @@
 # ErisFS 结题报告
 
-## 项目简介 [wsr]
-## 项目背景（极简）[wsr]
-## 项目架构[wsr]
+## 项目简介 
+我们的项目ErisFS是FreeRTOS第一个真正意义上的虚拟文件系统。
+ErisFS兼容所有Posix 文件相关API，并且可拓展性极强，可以支持多种文件系统及存储介质移植。
+
+它将FreeRTOS与其他实时操作系统在存储管理方面的差距完全抹平；还可能与其他Posix项目联动，
+极大地方便了降低了UNIX-like程序移植到FreeRTOS上的难度，激发了嵌入式系统的无限潜能。
+
+支持的File Posix API: 
+
+* open, close, read, write, rename, unlink, stat, fstat, creat, lseek, ftruncate ...
+* mount, unmount, mkfs, statfs ...
+
+支持的底层文件系统: 
+* ramFS
+* FATFS
+* 更多待移植
+
+
+## 项目背景
+近年来，物联网设备数量逐年增长，同时嵌入式设备平均所有的存储空间也在逐年增长。最初的嵌入式设备仅需采用向指定地址写入即可简单地管理数据，但随着存储容量的增加，这种方式的劣势不断凸显，对文件系统的需求也日益急迫。FreeRTOS作为嵌入式设备的领军项目，一直缺少一个易用全面的虚拟文件系统模块，这使得FreeRTOS无法胜任许多应用场景，与同类操作系统的差距日益明显。因此，我们希望通过开发一个虚拟文件系统来解决这个问题。
+
+## 项目架构
+![efs_total](/reports/img/efs.png)
+![efs_3](/reports/img/module_design.png)
+
+上两张图分别是ErisFS的总体架构以及核心部分的详细架构图，可以从中窥探到ErisFS的设计理念。
+
+当用户使用时，会先调用**Posix标准层**的Posix标准函数（open, close, read, write...），然后由**EFS虚拟层**的对应EFS函数查找到打开的文件标识符（efs_file，存储了文件基础信息），再调用**基础文件系统层**的对应操作对虚拟文件节点进行读写，最终在最底下的**存储介质读写层**这里调用具体的驱动进行介质读写。
+
+当添加新的文件系统时，需要为其每个操作函数编写一个适配层（用于转换函数参数格式等使得其匹配ErisFS）；添加新的底层读写介质时，需要添加硬件厂商提供的硬件驱动（一般是编写好的读写函数等）；相对于完全和FATFS锁定的FreeRTOS-Plus-FAT来说，ErisFS拥有无可比拟的可拓展性以及易拓展性。
+
+在我们的开发过程中，我们实现了ramFS，FATFS的移植，以及SD的驱动移植。选取ramFS的主要原因是其原理简单，易于实现，无需涉及硬件（直接在RAM中读写），因此在项目初期采用适合快速开发最小可行性版本，调试上层函数逻辑正确性。而移植FATFS则是在项目核心开发完成后，为了展现项目的实际意义所选取的一个较为实用的文件系统，并且选择了SD卡作为存储介质，这一部分的移植涉及较多硬件，虽然调试过程艰辛复杂，但是大幅增加了项目的实际可用性。
+
 ## 开发过程
-### 第一阶段
-#### efs.c[wsr]
+### 第一阶段 最小可行性系统
+此阶段计划为 FreeRTOS 实现最小可用的虚拟文件系统，仅支持磁盘的挂载与文件的读写操作、ramFS等。但是将完整地按照三层架构设计进行开发，方便后期拓展。
+#### efs.h
+其中的 ```efs_fdtable``` 表存储目前ErisFS中所有打开的文件标识符实体的信息以及与int类型的文件标识符的对应关系。
+
+#### efs.c
+实现有关efs内部的一些实用函数，例如文件路径的标准化处理，以及文件标识符的分配管理等，主要被其他文件调用。
+
+例如：
+* fd_new()：创建新的文件标识符实体
+* fd_get()：根据int类型的文件标识符找到对应的文件标识符实体（有一些基础信息，指向虚拟文件节点）
+* efs_init(): 初始化整个ErisFS的存储结构
+* efs_normalize_path(): 转换地址，主要处理 . ..
+
 
 #### efs_file.h
 
@@ -226,8 +268,8 @@ efs_fs的作用是对文件系统进行管理，功能包括文件系统的挂�
 - `efs_filesystem_get_mounted_path`：查找设备上挂载的文件系统等
 - `efs_filesystem_get_partition`：获取分区表
 
-#### efs_posix.c[wcx]
-第一阶段efs_posix.c主要包含open,read,write,close几个最基础的函数，通过调用文件结点和efs_file.c中的对应操作完成上层的封装和有效条件的判断。
+#### efs_Posix.c[wcx]
+第一阶段efs_Posix.c主要包含open,read,write,close几个最基础的函数，通过调用文件结点和efs_file.c中的对应操作完成上层的封装和有效条件的判断。
 
 open主要操作为通过fd_new创建一个文件结点，然后使用fd_get获取创建的的文件结点，然后调用efs_file_open进行文件的创建，同时完成该文件对应文件系统的挂载；read,write,close通过fd_get获取对应文件结点，然后调用efs_file中对应的函数进行处理。
 
@@ -240,7 +282,7 @@ int efs_open(const char *file, int flags, ...)
     fd = fd_new();
     if (fd < 0)
     {
-        printf("[efs_posix.c]failed to open a file in efs_posix_fd_new!\n");
+        printf("[efs_Posix.c]failed to open a file in efs_Posix_fd_new!\n");
         return -1;
     }
     d = fd_get(fd);
@@ -248,7 +290,7 @@ int efs_open(const char *file, int flags, ...)
     if (result < 0)
     {
         fd_release(fd);
-        printf("[efs_posix.c]failed to open a file in efs_posix_efs_file_open!\n");
+        printf("[efs_Posix.c]failed to open a file in efs_Posix_efs_file_open!\n");
 
         return -1;
     }
@@ -257,13 +299,24 @@ int efs_open(const char *file, int flags, ...)
 }
 ```
 
-除此之外efs_posix.c中还对函数返回值进行了最终的判断和报错提示，即fd_get是否找到有效结点和efs_file对应函数是否进行正确的操作。
-#### ramfs[lrs]
+除此之外efs_Posix.c中还对函数返回值进行了最终的判断和报错提示，即fd_get是否找到有效结点和efs_file对应函数是否进行正确的操作。
+#### ramFS[lrs]
 
-### 第二阶段
+#### 最小可行性测试结果
+![RWtest](/reports/img/rwtest.png)
+
+可以看到文件开关，读写功能均测试通过，最小可行性系统基本开发完成。这个最小可行性测试完成后，我们的项目实际上已经完成了一半，得到了一个规范的三层架构虚拟文件系统
+虽然目前只支持读写，但是接下来只要添加和移植而不是从零创造，难度小了很多。
+
+### 第二阶段 Posix标准完善
+在这一步中，主要进行对Posix标准层以及VFS虚拟层相应函数进行拓展，计划实现全部的Posix文件标准中的函数；同时编写了负责设备管理的device.c为第三阶段实际读写物理存储介质作准备。
 
 #### Posix 补充[wcx]
-posix扩展主要是根据posix标准，补全了一些关于文件和文件夹的函数，如lseek, rename, unlink, stat, fstat, statfs等文件操作和mkdir, rmdir, opendir, readdir, telldir, seekdir, rewinddir, closedir等文件夹操作。
+![Posix](/reports/img/Posix.png)
+
+上图展现了Posix 文件相关操作的全部函数，在第一阶段仅仅实现了前四个，本阶段计划实现剩下的全部函数（以及不在此图中的文件系统相关函数unmount, mkfs...等）。
+
+Posix扩展主要是根据Posix标准，补全了一些关于文件和文件夹的函数，如lseek, rename, unlink, stat, fstat, statfs等文件操作和mkdir, rmdir, opendir, readdir, telldir, seekdir, rewinddir, closedir等文件夹操作。
 
 其中，文件操作的实现和read,write这些基本操作类似；而文件夹操作其实也是一种特殊的文件操作，但是在细节处理时有所区别，通过数据结构和向efs_file对应函数传入不同参数实现，以mkdir为例，以下为其代码。
 
@@ -277,7 +330,7 @@ int mkdir(const char *path, mode_t mode)
     fd = fd_new();
     if (fd == -1)
     {
-        printf("[efs_posix.c]failed to get the file in efs_posix_mkdir!\n");
+        printf("[efs_Posix.c]failed to get the file in efs_Posix_mkdir!\n");
 
         return -1;
     }
@@ -288,7 +341,7 @@ int mkdir(const char *path, mode_t mode)
     if (result < 0)
     {
         fd_release(fd);
-        printf("[efs_posix.c]failed to create directory in mkdir!\n");
+        printf("[efs_Posix.c]failed to create directory in mkdir!\n");
         return -1;
     }
 
@@ -306,9 +359,13 @@ int mkdir(const char *path, mode_t mode)
 `efs_device_find`：查找设备 查找已实现的设备，并返回其结构体
 
 值得提出的是，device管理的核心是将底层的设备操作函数与上层抽象层链接以方便管理，理想状态下能够同时实现对板子上SD卡、Falsh等存储设备的统一管理。
-### 第三阶段
 
-#### FATFS 移植[wcx]
+### 第三阶段
+此阶段计划为为ErisFS添加底层文件系统。得益于规范的多层架构设计，不需要改动上两层代码即可为更多的底层文件系统添加支持。
+
+同时这一阶段为了能读写实体SD卡，选择了向STM32F429开发板进行移植，完成了许多硬件调试工作。
+
+#### FATFS 移植
 FATFS适配层主要实现了vfs虚拟层调用函数和FATFS的基本函数之间传入参数的适配，并且通过FreeRTOS中特有的空间分配释放等函数，为FATFS进行空间的分配。
 
 其中，又分为文件系统操作函数和文件操作函数，文件系统操作函数包括efs_fatfs_mount, efs_fatfs_unmount，efs_fatfs_mkfs,efs_fatfs_statfs,efs_fatfs_unlink,efs_fatfs_stat, efs_fatfs_rename；文件操作函数包括efs_fatfs_open, efs_fatfs_close, efs_fatfs_ioctl, efs_fatfs_read, efs_fatfs_write, efs_fatfs_lseek, efs_fatfs_getdents。
@@ -352,6 +409,15 @@ int efs_fatfs_unmount(struct efs_filesystem *fs)
 }
 ```
 #### 硬件移植[lrs]
+
+#### 测试结果
+![t1](/reports/img/t1.png)
+
+![t2](/reports/img/t2.jpg)
+
+第二阶段新增的各种Posix函数也已在硬件上测试通过，这里除了原来的测试之外，还加入了文件夹创建关闭删除等测试。
+
+至此，我们的ErisFS已经算是开发完成了，它已经实现了我们在项目简介里提出的所有目标，支持全部FILE POSIX API，有便于修改拓展移植的三层架构，适配好了ramfs（测试意义）和FATFS（实际意义）这两个开箱即用的文件系统。
 
 ### 第四阶段
 
@@ -513,8 +579,43 @@ void MixColumns(void)
 ```
 
 ## 项目总结
+我们的项目顺利按照开发路线完成了开发，其实现了中期报告中的所有目标。
 
-### 对比中期汇报[wsr]
+最后实现了架构科学，接口全面，方便拓展的虚拟文件系统ErisFS，弥补了FreeRTOS在虚拟文件系统方面的短板。
 
-### 项目意义[wsr]
+它还可与其他项目联动发挥更大的作用，例如与FreeRTOS-Plus-POSIX联动便捷unix-like程序到FreeRTOS上的移植；或是与FreeRTOS-Plus-TCP联动实现嵌入式芯片即可管理的NAS服务器。总之，它大大地拓宽了FreeRTOS的应用广度与可能性，希望它能为FreeRTOS生态圈的发展做出一点贡献。
+
+
+### 对比中期汇报
+#### 性能测试/缓存？
+关于这两点有关性能的问题，我们对此项目（虚拟文件系统）的定位进行了思考，它实际上更像是一个管理系统而非具体的文件系统。文件读写的效率不取决于我们，而取决于底层所用的文件系统格式以及下方的存储介质技术。同理，缓存技术的采用应该由底层文件系统实现，而不是我们的项目。
+
+因此性能测试对我们的项目没有意义，确保全部功能的正确性即可，而这已在前面的三个阶段测试已经展现过了。
+
+#### MMU？
+在开题报告时邢凯老师曾提过MMU，在最后的拓展阶段我们也想到了这个方向，但是没有选择它的具体原因有三点：
+
+* 第一点是最后选择的硬件板子本身芯片STM32F429就不支持MMU，因此软件层面即使实现了也没有意义
+* 第二点是，在存储容量增长的现在，大部分嵌入式设备的运行内存依然很少，这是他们和PC的CPU之间的重大区别。MMU不被认为是实时操作系统的必需功能。实际上，作为专注精简的文件系统，FreeRTOS官方也认为不需要实现MMU繁杂的功能；同类型的RT-Thread其基础版本中也没有MMU的身影。
+
+* 第三点，也是最基础的，我们的项目是涉及存储，而非内存管理，因此MMU和我们的方向差距过远，不予考虑
+
+
 ### 分工致谢
+* 吴书让：ErisFS 主文件相关、测试程序编写、整体调试工作
+
+* 李润时：RamFS、FATFS相关、硬件调试工作
+
+* 罗胤玻：ErisFS 文件系统相关、device设备管理
+
+* 万宸希：ErisFS POSIX 相关
+
+* 胡天羽：加密、辅助函数相关
+
+非常感谢各位同学在项目开发过程的全力支持，特别是考完后最近几天在开发调试上投入的大量时间、也很感谢项目过程中助教给出的许多实用建议.
+
+最后，非常感谢邢凯老师从开题报告开始到最后硬件调试这几个月来的对我们的各种建议和设备经费支持，帮助我们更好的完成了这个项目
+
+以上就是我们组x-Eris大作业结题报告。
+
+
