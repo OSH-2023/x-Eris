@@ -300,7 +300,44 @@ int efs_open(const char *file, int flags, ...)
 ```
 
 除此之外efs_Posix.c中还对函数返回值进行了最终的判断和报错提示，即fd_get是否找到有效结点和efs_file对应函数是否进行正确的操作。
-#### ramFS[lrs]
+#### ramFS
+由于ramFS本身较为简单，第一阶段已经基本上实现了ramFS的所有函数，并通过结构体将操作挂到EFS中。文件操作(如open,write)如下所示:
+```c
+static const struct efs_file_ops _ram_fops =
+{
+    efs_ramfs_open,
+    efs_ramfs_close,
+    efs_ramfs_ioctl,
+    efs_ramfs_read,
+    efs_ramfs_write,
+    NULL,
+    efs_ramfs_lseek,
+    efs_ramfs_getdents,
+};
+```
+文件系统操作(如mount,rename)类似，这里将不列出。
+由于是在内存中操作，而FreeRTOS本身对内存支持的操作有限，不能支持ramFS的全部功能，所以我们在其内存管理的基础上更改了部分结构，并增加如realloc等函数补全操作。以下为内存记录的结构:
+```c
+{
+    void                      *start_addr;
+    eris_size_t               pool_size;                    /* pool size */
+    eris_size_t               xMinimumEverFreeBytesRemaining;
+    eris_size_t               xFreeBytesRemaining;        /*available_size*/
+    eris_size_t               max_used_size;              /*maximum allocated size*/
+    eris_size_t               xNumberOfSuccessfulAllocations;
+    eris_size_t               xNumberOfSuccessfulFrees;
+    BlockLink_t               xStart;
+    BlockLink_t              *free_list;
+    BlockLink_t              *pxEnd;
+    SemaphoreHandle_t         lock;                       /* semaphore lock */
+    eris_bool_t               locked;                     /* External lock mark */
+};
+```
+在使用内存前需先对内存进行初始化efs_ramfs_create函数。该函数传入初始化的内存地址指针和分配内存大小，执行时在该段内存的头部创建一个节点记录该段内存使用情况，结构如上图所示。
+下以两个重要操作的执行过程:
+- `open`: 当第一次打开某个文件时，即会新建一个节点，并用双向循环链表的形式接入初始化时创建的节点所在链表。若文件已经创建，则通过链表找到需要打开的节点。
+- `write`：读取时若此时已分配空间不足，则会通过realloc函数获取充足空间并执行写操作。
+至此，最小可行性系统已实现。
 
 #### 最小可行性测试结果
 ![RWtest](/reports/img/rwtest.png)
@@ -408,8 +445,8 @@ int efs_fatfs_unmount(struct efs_filesystem *fs)
     return 0;
 }
 ```
-#### 硬件移植[lrs]
-
+#### 硬件移植
+经过多方面考虑，我们选用型号为`stm32f429IGT6`，
 #### 测试结果
 ![t1](/reports/img/t1.png)
 
